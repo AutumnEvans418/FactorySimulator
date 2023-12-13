@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace ConsoleApp1.Gpt
+namespace ConsoleApp1.Gpt.Buildings
 {
 
     public class Building : IBuilding
@@ -13,7 +13,7 @@ namespace ConsoleApp1.Gpt
         public string Name { get; set; }
         public Dictionary<string, int> InputResources { get; set; }
         public Dictionary<string, int> OutputResources { get; set; }
-        public IBuilding? OutputConveyor { get; set; } // New property for output conveyor
+        public List<IBuilding> OutputConveyors { get; set; } = new List<IBuilding>();
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
         public IGame Game { get; }
         public Building(string name, Dictionary<string, int> input, List<Recipe> recipes, IGame game)
@@ -35,9 +35,9 @@ namespace ConsoleApp1.Gpt
             game.AddBuilding(this);
         }
 
-        public void SetOutputConveyor(IBuilding outputBuilding)
+        public void AddOutputConveyor(IBuilding outputBuilding)
         {
-            OutputConveyor = outputBuilding;
+            OutputConveyors.Add(outputBuilding);
         }
 
         public void ProcessResources(Recipe recipe)
@@ -49,12 +49,12 @@ namespace ConsoleApp1.Gpt
                 InputResources[recipe.InputResource] -= recipe.InputQuantity;
                 OutputResources.CreateOrAdd(recipe.OutputResource, recipe.OutputQuantity);
 
-                // Pass resources to the connected building via the output conveyor
-                if (OutputConveyor != null)
+                foreach (var conveyors in OutputConveyors)
                 {
                     foreach (var output in OutputResources)
                     {
-                        OutputConveyor.InputResources.CreateOrAdd(output.Key, output.Value);
+                        conveyors.InputResources.CreateOrAdd(output.Key, output.Value);
+                        OutputResources[output.Key] = 0;
                     }
                 }
             }

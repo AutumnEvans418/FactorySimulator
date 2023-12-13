@@ -49,7 +49,11 @@
             // Creating game instance and adding buildings
             var game = new Game();
 
-            game.Miner(0).Smelter();
+            var miner = game.Miner(0);
+
+            miner.Smelter();
+            miner.Smelter();
+
             //game.AddBuilding(miner);
 
 

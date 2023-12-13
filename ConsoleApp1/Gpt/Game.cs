@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1.Gpt
+﻿using ConsoleApp1.Gpt.Buildings;
+
+namespace ConsoleApp1.Gpt
 {
     public class Game : IGame
     {
@@ -62,11 +64,14 @@
                 Console.Write(building.Name);
                 Console.Write("->");
 
-                if (building.OutputConveyor != null)
+                if (building.OutputConveyors.Any())
                 {
                     foreach (var outputResource in building.OutputResources)
                     {
-                        Console.Write(outputResource.Key + " (" + (building.OutputConveyor.InputResources.ContainsKey(outputResource.Key) ? building.OutputConveyor.InputResources[outputResource.Key].ToString() : "0") + ")" + "->");
+                        foreach (var conveyor in building.OutputConveyors)
+                        {
+                            Console.Write(outputResource.Key + " (" + (conveyor.InputResources.ContainsKey(outputResource.Key) ? conveyor.InputResources[outputResource.Key].ToString() : "0") + ")" + "->");
+                        }
                     }
                 }
                 else

@@ -1,49 +1,49 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
-public class Miner : IDrawable, IUpdateable
-{
-    public Item Output { get; set; }
-    private IOre q;
+//public class Miner : IDrawable, IUpdateable
+//{
+//    public Item Output { get; set; }
+//    private IOre q;
 
-    public int Speed { get; set; } = 30;
+//    public int Speed { get; set; } = 30;
 
-    public int Interval { get; set; }
+//    public int Interval { get; set; }
 
-    public Miner(IOre q)
-    {
-        this.q = q;
-    }
+//    public Miner(IOre q)
+//    {
+//        this.q = q;
+//    }
 
-    public string Draw()
-    {
-        return $"Mine ({Speed}min)->{Output?.Draw()}";
-    }
+//    public string Draw()
+//    {
+//        return $"Mine ({Speed}min)->{Output?.Draw()}";
+//    }
 
-    void IUpdateable.Update()
-    {
-        if (Output != null)
-        {
-            Output.Update();
-        }
-        Interval++;
+//    void IUpdateable.Update()
+//    {
+//        if (Output != null)
+//        {
+//            Output.Update();
+//        }
+//        Interval++;
 
-        var when = 60 / Speed;
+//        var when = 60 / Speed;
 
-        if (Interval % when == 0)
-        {
+//        if (Interval % when == 0)
+//        {
 
-            Interval = 0;
-            if (Output != null && q.Count > 0)
-            {
-                q.Count--;
-                Output.Count++;
-            }
-        }
+//            Interval = 0;
+//            if (Output != null && q.Count > 0)
+//            {
+//                q.Count--;
+//                Output.Count++;
+//            }
+//        }
 
 
-    }
-}
+//    }
+//}
 
 //public class Query
 //{
