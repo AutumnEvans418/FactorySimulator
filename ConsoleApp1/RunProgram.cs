@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1.Gpt
+﻿using ConsoleApp1.Gpt.Buildings;
+
+namespace ConsoleApp1.Gpt
 {
     public static class RunProgram
     {
@@ -20,7 +22,7 @@
             //{
             //    new Recipe("IronOre", "IronOre", 1, 1, 60)
             //});
-            
+
             //var smelter = new Building("Smelter", new Dictionary<string, int> { { "IronOre", 1 } }, new List<Recipe>
             //{
             //    new Recipe("IronOre", "IronIngot", 1, 1, 30)
@@ -30,7 +32,7 @@
             //{
             //    new Recipe("IronOre", "IronIngot", 1, 1, 30)
             //});
-            
+
             //var constructor = new Building("Constructor", new Dictionary<string, int> { { "IronIngot", 1 } }, new List<Recipe>
             //{
             //    new Recipe("IronIngot", "IronRod", 1, 1, 15),
@@ -44,17 +46,22 @@
             //smelter.SetOutputConveyor(constructor);
             //constructor.SetOutputConveyor(assembler);
 
-           // miner2.SetOutputConveyor(smelter2);
+            // miner2.SetOutputConveyor(smelter2);
 
             // Creating game instance and adding buildings
+
+            var count = 0;
+
             var game = new Game();
+            game.StartGame(f =>
+            {
+                count++;
+                Building splitter = f.Miner(0).Split();
 
-            var splitter = game.Miner(0).Split();
+                splitter.Smelter();
+                splitter.Smelter();
 
-            splitter.Smelter();
-            splitter.Smelter();
-            splitter.Smelter();
-            splitter.Smelter();
+            });
 
             //game.Miner(0).Smelter();
 
@@ -69,7 +76,6 @@
             //game.AddBuilding(smelter2);
 
             // Starting the game
-            game.StartGame();
 
         }
     }

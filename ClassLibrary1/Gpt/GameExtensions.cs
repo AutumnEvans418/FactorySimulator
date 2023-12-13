@@ -16,7 +16,7 @@ namespace ConsoleApp1.Gpt
             }
         }
 
-        public static Miner Miner(this Game game, int node)
+        public static Miner Miner(this Factory game, int node)
         {
             var miner = new Miner(game.Node(node), game);
             return miner;

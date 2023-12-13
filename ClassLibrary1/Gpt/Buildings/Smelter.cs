@@ -2,7 +2,7 @@
 {
     public class Smelter : Building
     {
-        public Smelter(Game game) : base("Smelter", new Dictionary<string, int>(), game)
+        public Smelter(Factory game) : base("Smelter", new Dictionary<string, int>(), game)
         {
             Recipes.Add(new Recipe("IronOre", "IronIngot", 1, 1, 30));
             Recipes.Add(new Recipe("CopperOre", "CopperIngot", 1, 1, 30));

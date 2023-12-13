@@ -2,7 +2,7 @@
 {
     public class Miner : Building
     {
-        public Miner(Dictionary<string, int> input, Game game) : base("Miner", input, game)
+        public Miner(Dictionary<string, int> input, Factory game) : base("Miner", input, game)
         {
             Recipes.Add(new Recipe("IronOre", "IronOre", 1, 1, 60));
         }
@@ -10,7 +10,7 @@
 
     public class Split : Building
     {
-        public Split(Game game) : base("Splitter", new Dictionary<string, int>(), game)
+        public Split(Factory game) : base("Splitter", new Dictionary<string, int>(), game)
         {
             Recipes.Add(new Recipe("All", "All", 1, 1, 120));
         }

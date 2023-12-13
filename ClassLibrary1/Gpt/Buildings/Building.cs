@@ -16,8 +16,8 @@ namespace ConsoleApp1.Gpt.Buildings
         internal List<Building> OutputConveyors { get; set; } = new List<Building>();
         internal List<Building> InputConveyors { get; set; } = new List<Building>();
         internal List<Recipe> Recipes { get; set; } = new List<Recipe>();
-        internal Game Game { get; }
-        public Building(string name, Dictionary<string, int> input, List<Recipe> recipes, Game game)
+        internal Factory Game { get; }
+        public Building(string name, Dictionary<string, int> input, List<Recipe> recipes, Factory game)
         {
             Name = name;
             InputResources = input;
@@ -27,7 +27,7 @@ namespace ConsoleApp1.Gpt.Buildings
             game.AddBuilding(this);
         }
 
-        public Building(string name, Dictionary<string, int> input, Game game)
+        public Building(string name, Dictionary<string, int> input, Factory game)
         {
             Name = name;
             InputResources = input;

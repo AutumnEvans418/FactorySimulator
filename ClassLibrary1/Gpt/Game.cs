@@ -7,29 +7,52 @@ namespace ConsoleApp1.Gpt
         internal Dictionary<string, int>[] Nodes { get; set; }
         public Game()
         {
-            Nodes = new Dictionary<string, int>[]
-            {
-               new Dictionary<string, int>{{"IronOre", int.MaxValue} }
-            };
-
+            Nodes =
+            [
+               new Dictionary<string, int> { { "IronOre", int.MaxValue } }
+            ];
+            factory = new(this);
         }
 
-        private List<Building> buildings = new List<Building>();
-
-        internal void AddBuilding(Building building)
+        private Factory factory;
+        internal Dictionary<string, int> Node(int node)
         {
-            buildings.Add(building);
+            return Nodes[node];
+        }
+        internal void SwapFactor(Factory newFactory)
+        {
+            for (int i = 0; i < newFactory.Buildings.Count; i++)
+            {
+                if (i >= factory.Buildings.Count)
+                {
+                    continue;
+                }
+
+                var oldBuilding = factory.Buildings[i];
+                var newBuilding = newFactory.Buildings[i];
+
+                if (oldBuilding.Name != newBuilding.Name)
+                {
+                    continue;
+                }
+                newBuilding.OutputResources = oldBuilding.OutputResources;
+                newBuilding.InputResources = oldBuilding.InputResources;
+            }
+            factory = newFactory;
         }
 
-        public void StartGame()
+        public void StartGame(Action<Factory> action)
         {
             var ticks = 0;
 
             while (true)
             {
                 ticks++;
+                var f = new Factory(this);
+                action(f);
+                SwapFactor(f);
                 // Start processing resources for each building
-                foreach (var building in buildings)
+                foreach (var building in factory.Buildings)
                 {
                     foreach (var recipe in building.Recipes)
                     {
@@ -50,7 +73,7 @@ namespace ConsoleApp1.Gpt
         {
             var totalItem = new Dictionary<string, int>();
 
-            foreach (var building in buildings)
+            foreach (var building in factory.Buildings)
             {
                 var resources = building.OutputResources.AsEnumerable();
                 if (Nodes.All(n => n != building.InputResources))
@@ -95,7 +118,7 @@ namespace ConsoleApp1.Gpt
                 }
             }
             Console.SetCursorPosition(0, 0);
-            foreach (var building in buildings.Where(b => b.InputConveyors.Count == 0))
+            foreach (var building in factory.Buildings.Where(b => b.InputConveyors.Count == 0))
             {
                 DisplayBuilding(building);
             }
@@ -103,10 +126,7 @@ namespace ConsoleApp1.Gpt
             DisplayItems();
         }
 
-        internal Dictionary<string, int> Node(int node)
-        {
-            return Nodes[node];
-        }
+       
     }
 }
 
