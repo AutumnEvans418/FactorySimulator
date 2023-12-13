@@ -2,9 +2,9 @@
 
 namespace ConsoleApp1.Gpt
 {
-    public class Game : IGame
+    public class Game
     {
-        public Dictionary<string, int>[] Nodes { get; set; }
+        internal Dictionary<string, int>[] Nodes { get; set; }
         public Game()
         {
             Nodes = new Dictionary<string, int>[]
@@ -16,7 +16,7 @@ namespace ConsoleApp1.Gpt
 
         private List<Building> buildings = new List<Building>();
 
-        public void AddBuilding(Building building)
+        internal void AddBuilding(Building building)
         {
             buildings.Add(building);
         }
@@ -33,7 +33,7 @@ namespace ConsoleApp1.Gpt
                 {
                     foreach (var recipe in building.Recipes)
                     {
-                        var when = 60 / recipe.ProductionRate;
+                        var when = 120 / recipe.ProductionRate;
 
                         if (ticks % when == 0)
                         {
@@ -42,18 +42,18 @@ namespace ConsoleApp1.Gpt
                     }
                 }
                 DisplayBuildingChain();
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
         }
 
-        public void DisplayBuildingChain()
+        internal void DisplayItems()
         {
             var totalItem = new Dictionary<string, int>();
-            Console.SetCursorPosition(0, 0);
+
             foreach (var building in buildings)
             {
                 var resources = building.OutputResources.AsEnumerable();
-                if(Nodes.All(n => n != building.InputResources))
+                if (Nodes.All(n => n != building.InputResources))
                 {
                     resources = resources.Union(building.InputResources);
                 }
@@ -61,37 +61,49 @@ namespace ConsoleApp1.Gpt
                 {
                     totalItem.CreateOrAdd(item.Key, item.Value);
                 }
-                Console.Write(building.Name);
-                Console.Write("->");
-
-                if (building.OutputConveyors.Any())
-                {
-                    foreach (var outputResource in building.OutputResources)
-                    {
-                        foreach (var conveyor in building.OutputConveyors)
-                        {
-                            Console.Write(outputResource.Key + " (" + (conveyor.InputResources.ContainsKey(outputResource.Key) ? conveyor.InputResources[outputResource.Key].ToString() : "0") + ")" + "->");
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var output in building.OutputResources)
-                    {
-                        Console.Write($"{output.Key} ({output.Value})");
-                    }    
-                    Console.WriteLine();
-                }
             }
-            Console.WriteLine();
-
             foreach (var item in totalItem)
             {
                 Console.WriteLine($"{item.Key}: {item.Value}");
             }
         }
 
-        public Dictionary<string, int> Node(int node)
+        internal string Output(IDictionary<string, int> building) => building.Aggregate(string.Empty, (p, f) => p + $"{f.Key} ({f.Value})");
+
+        internal void DisplayBuildingChain()
+        {
+            void DisplayBuilding(Building building)
+            {
+                Console.Write(building.Name);
+                Console.Write("->");
+
+                if (building.OutputConveyors.Any())
+                {
+                    var (left, top) = Console.GetCursorPosition();
+                    for (int i = 0; i < building.OutputConveyors.Count; i++)
+                    {
+                        Console.Write(new string(' ', Console.BufferWidth));
+                        Console.SetCursorPosition(left, top + i);
+                        var conveyor = building.OutputConveyors[i];
+                        Console.Write(Output(conveyor.InputResources) + "->");
+                        DisplayBuilding(conveyor);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(Output(building.OutputResources));
+                }
+            }
+            Console.SetCursorPosition(0, 0);
+            foreach (var building in buildings.Where(b => b.InputConveyors.Count == 0))
+            {
+                DisplayBuilding(building);
+            }
+            Console.WriteLine();
+            DisplayItems();
+        }
+
+        internal Dictionary<string, int> Node(int node)
         {
             return Nodes[node];
         }

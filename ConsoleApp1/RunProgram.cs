@@ -6,10 +6,10 @@
         public static void Run()
         {
             // Creating resources
-            var ironOre = new Resource { Name = "IronOre", Quantity = 0 };
-            var ironIngot = new Resource { Name = "IronIngot", Quantity = 0 };
-            var ironRod = new Resource { Name = "IronRod", Quantity = 0 };
-            var ironPlate = new Resource { Name = "IronPlate", Quantity = 0 };
+            //var ironOre = new Resource { Name = "IronOre", Quantity = 0 };
+            //var ironIngot = new Resource { Name = "IronIngot", Quantity = 0 };
+            //var ironRod = new Resource { Name = "IronRod", Quantity = 0 };
+            //var ironPlate = new Resource { Name = "IronPlate", Quantity = 0 };
 
             // Creating buildings
             //var miner = new Building("Miner", new Dictionary<string, int>() { { "IronOre", 60 } }, new List<Recipe>
@@ -49,10 +49,14 @@
             // Creating game instance and adding buildings
             var game = new Game();
 
-            var miner = game.Miner(0);
+            var splitter = game.Miner(0).Split();
 
-            miner.Smelter();
-            miner.Smelter();
+            splitter.Smelter();
+            splitter.Smelter();
+            splitter.Smelter();
+            splitter.Smelter();
+
+            //game.Miner(0).Smelter();
 
             //game.AddBuilding(miner);
 

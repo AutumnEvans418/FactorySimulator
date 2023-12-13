@@ -16,17 +16,24 @@ namespace ConsoleApp1.Gpt
             }
         }
 
-        public static IMiner Miner(this IGame game, int node)
+        public static Miner Miner(this Game game, int node)
         {
             var miner = new Miner(game.Node(node), game);
             return miner;
         }
 
-        public static ISmelter Smelter(this IMiner miner)
+        public static Smelter Smelter(this Building miner)
         {
             var smelter = new Smelter(miner.Game);
             miner.AddOutputConveyor(smelter);
             return smelter;
+        }
+
+        public static Split Split(this Building building)
+        {
+            var split = new Split(building.Game);
+            building.AddOutputConveyor(split);
+            return split;
         }
     }
 }
