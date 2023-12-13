@@ -1,14 +1,14 @@
-﻿namespace ConsoleApp1.Gpt
+﻿namespace ClassLibrary1.Gpt.Item
 {
-    public class Recipe
+    public struct Recipe
     {
-        public string InputResource { get; }
-        public string OutputResource { get; }
+        public ItemName InputResource { get; }
+        public ItemName OutputResource { get; }
         public int InputQuantity { get; }
         public int OutputQuantity { get; }
-        public int ProductionRate { get; set; }
+        public int ProductionRate { get; }
 
-        public Recipe(string inputResource, string outputResource, int inputQuantity, int outputQuantity, int rate)
+        public Recipe(ItemName inputResource, ItemName outputResource, int inputQuantity, int outputQuantity, int rate)
         {
             InputResource = inputResource;
             OutputResource = outputResource;

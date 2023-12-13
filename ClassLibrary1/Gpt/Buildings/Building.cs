@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using ClassLibrary1.Gpt.Item;
 
 namespace ConsoleApp1.Gpt.Buildings
 {
@@ -11,27 +12,36 @@ namespace ConsoleApp1.Gpt.Buildings
     public class Building
     {
         internal string Name { get; set; }
-        internal Dictionary<string, int> InputResources { get; set; }
-        internal Dictionary<string, int> OutputResources { get; set; }
+        internal Dictionary<ItemName, int> InputResources { get; set; }
+        internal Dictionary<ItemName, int> OutputResources { get; set; }
         internal List<Building> OutputConveyors { get; set; } = new List<Building>();
         internal List<Building> InputConveyors { get; set; } = new List<Building>();
         internal List<Recipe> Recipes { get; set; } = new List<Recipe>();
         internal Factory Game { get; }
-        public Building(string name, Dictionary<string, int> input, List<Recipe> recipes, Factory game)
+        public Building(string name, Dictionary<ItemName, int> input, List<Recipe> recipes, Factory game)
         {
             Name = name;
             InputResources = input;
-            OutputResources = new Dictionary<string, int>();
+            OutputResources = new Dictionary<ItemName, int>();
             Recipes = recipes;
             Game = game;
             game.AddBuilding(this);
         }
 
-        public Building(string name, Dictionary<string, int> input, Factory game)
+        public Building(string name, Dictionary<ItemName, int> input, Factory game)
         {
             Name = name;
             InputResources = input;
-            OutputResources = new Dictionary<string, int>();
+            OutputResources = new Dictionary<ItemName, int>();
+            Game = game;
+            game.AddBuilding(this);
+        }
+
+        public Building(string name, Factory game)
+        {
+            Name = name;
+            InputResources = new Dictionary<ItemName, int>();
+            OutputResources = new Dictionary<ItemName, int>();
             Game = game;
             game.AddBuilding(this);
         }

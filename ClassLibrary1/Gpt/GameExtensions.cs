@@ -1,10 +1,11 @@
-﻿using ConsoleApp1.Gpt.Buildings;
+﻿using ClassLibrary1.Gpt.Item;
+using ConsoleApp1.Gpt.Buildings;
 
 namespace ConsoleApp1.Gpt
 {
     public static class GameExtensions
     {
-        public static void CreateOrAdd(this Dictionary<string, int> dict, string key, int add)
+        public static void CreateOrAdd(this Dictionary<ItemName, int> dict, ItemName key, int add)
         {
             if (dict.ContainsKey(key))
             {
@@ -23,17 +24,19 @@ namespace ConsoleApp1.Gpt
         }
 
         public static Smelter Smelter(this Building miner)
-        {
-            var smelter = new Smelter(miner.Game);
-            miner.AddOutputConveyor(smelter);
-            return smelter;
-        }
+            => Create(miner, new Smelter(miner.Game));
 
         public static Split Split(this Building building)
+            => Create(building, new Split(building.Game));
+
+        public static Constructor Constructor(this Building building, Recipe recipe) 
+            => Create(building, new Constructor(building.Game, recipe));
+
+        private static T Create<T>(Building prev, T create) where T : Building
         {
-            var split = new Split(building.Game);
-            building.AddOutputConveyor(split);
-            return split;
+            var building = create;
+            prev.AddOutputConveyor(building);
+            return building;
         }
     }
 }

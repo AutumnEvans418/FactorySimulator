@@ -1,4 +1,5 @@
-﻿using ConsoleApp1.Gpt.Buildings;
+﻿using ClassLibrary1.Gpt.Item;
+using ConsoleApp1.Gpt.Buildings;
 
 namespace ConsoleApp1.Gpt
 {
@@ -16,7 +17,7 @@ namespace ConsoleApp1.Gpt
             Buildings.Add(building);
         }
 
-        internal Dictionary<string, int> Node(int node) => game.Node(node);
+        internal Dictionary<ItemName, int> Node(int node) => game.Node(node);
     }
 }
 

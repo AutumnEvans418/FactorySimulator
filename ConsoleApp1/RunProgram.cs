@@ -1,4 +1,5 @@
-﻿using ConsoleApp1.Gpt.Buildings;
+﻿using ClassLibrary1.Gpt.Item;
+using ConsoleApp1.Gpt.Buildings;
 
 namespace ConsoleApp1.Gpt
 {
@@ -56,10 +57,15 @@ namespace ConsoleApp1.Gpt
             game.StartGame(f =>
             {
                 count++;
-                Building splitter = f.Miner(0).Split();
 
-                splitter.Smelter();
-                splitter.Smelter();
+                var miner = f.Miner(0).Split();
+                
+                miner.Smelter().Constructor(RecipeList.IronRod);
+                miner.Smelter().Constructor(RecipeList.IronPlate);
+                //Building splitter = f.Miner(0).Split();
+
+                //splitter.Smelter().Constructor();
+                //splitter.Smelter();
 
             });
 

@@ -1,21 +1,22 @@
-﻿using ConsoleApp1.Gpt.Buildings;
+﻿using ClassLibrary1.Gpt.Item;
+using ConsoleApp1.Gpt.Buildings;
 
 namespace ConsoleApp1.Gpt
 {
     public class Game
     {
-        internal Dictionary<string, int>[] Nodes { get; set; }
+        internal Dictionary<ItemName, int>[] Nodes { get; set; }
         public Game()
         {
             Nodes =
             [
-               new Dictionary<string, int> { { "IronOre", int.MaxValue } }
+               new Dictionary<ItemName, int> { { ItemName.IronOre, int.MaxValue } }
             ];
             factory = new(this);
         }
 
         private Factory factory;
-        internal Dictionary<string, int> Node(int node)
+        internal Dictionary<ItemName, int> Node(int node)
         {
             return Nodes[node];
         }
@@ -71,7 +72,7 @@ namespace ConsoleApp1.Gpt
 
         internal void DisplayItems()
         {
-            var totalItem = new Dictionary<string, int>();
+            var totalItem = new Dictionary<ItemName, int>();
 
             foreach (var building in factory.Buildings)
             {
@@ -91,7 +92,7 @@ namespace ConsoleApp1.Gpt
             }
         }
 
-        internal string Output(IDictionary<string, int> building) => building.Aggregate(string.Empty, (p, f) => p + $"{f.Key} ({f.Value})");
+        internal string Output(IDictionary<ItemName, int> building) => building.Aggregate(string.Empty, (p, f) => p + $"{f.Key} ({f.Value})");
 
         internal void DisplayBuildingChain()
         {

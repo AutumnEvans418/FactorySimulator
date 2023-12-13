@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.Gpt
+﻿namespace ClassLibrary1.Gpt.Item
 {
     public class Resource
     {
