@@ -5,9 +5,9 @@ namespace ConsoleApp1.Gpt
 {
     public class Factory
     {
-        private readonly Game game;
+        private readonly World game;
 
-        public Factory(Game game)
+        public Factory(World game)
         {
             this.game = game;
         }

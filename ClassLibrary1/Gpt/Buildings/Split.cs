@@ -2,6 +2,14 @@
 
 namespace ConsoleApp1.Gpt.Buildings
 {
+    public class Merge : Building
+    {
+        public Merge(Factory game) : base("Merger", game)
+        {
+            
+        }
+    }
+
     public class Split : Building
     {
         public Split(Factory game) : base("Splitter", game)
@@ -11,11 +19,18 @@ namespace ConsoleApp1.Gpt.Buildings
 
         int tick;
 
+        public override void CopyTo(Building building)
+        {
+            if(building is Split split)
+            {
+                split.tick = this.tick;
+            }
+            base.CopyTo(building);
+        }
+
         internal override void ProcessResources(Recipe recipe)
         {
-            bool canProduce = InputResources.Any(i => i.Value >= recipe.InputQuantity);
-
-
+            bool canProduce = InputResources.Any(i => i.Value > 0);
 
             if (canProduce)
             {

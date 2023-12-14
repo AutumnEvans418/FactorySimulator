@@ -7,8 +7,10 @@
         IronIngot,
         IronRod,
         IronPlate,
+        Screw,
         
         CopperOre,
         CopperIngot,
+        ReinforcedPlate,
     }
 }

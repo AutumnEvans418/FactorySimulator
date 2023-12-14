@@ -3,23 +3,33 @@ using ConsoleApp1.Gpt.Buildings;
 
 namespace ConsoleApp1.Gpt
 {
-    public class Game
+    public class World
     {
-        internal Dictionary<ItemName, int>[] Nodes { get; set; }
-        public Game()
+        public World()
         {
             Nodes =
             [
                new Dictionary<ItemName, int> { { ItemName.IronOre, int.MaxValue } }
             ];
-            factory = new(this);
         }
-
-        private Factory factory;
+        internal Dictionary<ItemName, int>[] Nodes { get; set; }
         internal Dictionary<ItemName, int> Node(int node)
         {
             return Nodes[node];
         }
+    }
+
+    public class Game
+    {
+        public Game()
+        {
+            world = new World();
+            factory = new(world);
+        }
+
+        private Factory factory;
+        private World world;
+        
         internal void SwapFactor(Factory newFactory)
         {
             for (int i = 0; i < newFactory.Buildings.Count; i++)
@@ -36,8 +46,8 @@ namespace ConsoleApp1.Gpt
                 {
                     continue;
                 }
-                newBuilding.OutputResources = oldBuilding.OutputResources;
-                newBuilding.InputResources = oldBuilding.InputResources;
+
+                oldBuilding.CopyTo(newBuilding);
             }
             factory = newFactory;
         }
@@ -49,7 +59,7 @@ namespace ConsoleApp1.Gpt
             while (true)
             {
                 ticks++;
-                var f = new Factory(this);
+                var f = new Factory(this.world);
                 action(f);
                 SwapFactor(f);
                 // Start processing resources for each building
@@ -77,7 +87,7 @@ namespace ConsoleApp1.Gpt
             foreach (var building in factory.Buildings)
             {
                 var resources = building.OutputResources.AsEnumerable();
-                if (Nodes.All(n => n != building.InputResources))
+                if (world.Nodes.All(n => n != building.InputResources))
                 {
                     resources = resources.Union(building.InputResources);
                 }

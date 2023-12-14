@@ -59,12 +59,19 @@ namespace ConsoleApp1.Gpt.Buildings
 
         internal virtual void ProcessResources(Recipe recipe)
         {
-            bool canProduce = InputResources.Any(i => i.Key == recipe.InputResource && i.Value >= recipe.InputQuantity);
+            bool canProduce = recipe.Input.All(ri => InputResources.Any(i => i.Key == ri.Item && i.Value >= ri.Quantity));
 
             if (canProduce)
             {
-                InputResources[recipe.InputResource] -= recipe.InputQuantity;
-                OutputResources.CreateOrAdd(recipe.OutputResource, recipe.OutputQuantity);
+                foreach (var item in recipe.Input)
+                {
+                    InputResources[item.Item] -= item.Quantity;
+                }
+
+                foreach (var item in recipe.Output)
+                {
+                    OutputResources.CreateOrAdd(item.Item, item.Quantity);
+                }
 
                 ProcessConveyors();
             }
@@ -82,7 +89,11 @@ namespace ConsoleApp1.Gpt.Buildings
             }
         }
 
-       
+        public virtual void CopyTo(Building building)
+        {
+            building.OutputResources = this.OutputResources;
+            building.InputResources = this.InputResources;
+        }
     }
 }
 
