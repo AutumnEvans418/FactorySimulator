@@ -17,8 +17,8 @@ namespace ConsoleApp1.Gpt
 
                 var miner = f.Miner(0).Split();
                 
-                miner.Smelter().Constructor(RecipeList.IronRod).Constructor(RecipeList.Screw);
-                miner.Smelter().Constructor(RecipeList.IronPlate);
+                var screws = miner.Smelter().Constructor(RecipeList.IronRod).Constructor(RecipeList.Screw);
+                miner.Smelter().Constructor(RecipeList.IronPlate).Merge(screws).Assembler(RecipeList.ReinforcedPlate);
 
 
             });

@@ -23,6 +23,16 @@ namespace ConsoleApp1.Gpt
             return miner;
         }
 
+        public static Merge Merge(this Building building, Building secondary)
+        {
+            var c = Create(building, new Merge(building.Game));
+            secondary.AddOutputConveyor(c);
+            return c;
+        }
+
+        public static Assembler Assembler(this Building building, Recipe recipe)
+            => Create(building, new Assembler(building.Game, recipe));
+
         public static Smelter Smelter(this Building miner)
             => Create(miner, new Smelter(miner.Game));
 

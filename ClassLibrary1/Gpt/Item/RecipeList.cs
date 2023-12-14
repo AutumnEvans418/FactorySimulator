@@ -16,5 +16,7 @@ namespace ClassLibrary1.Gpt.Item
             = new(
                 [new RecipeItem(ItemName.Screw, 12), new RecipeItem(ItemName.IronPlate, 6)], 
                 [new RecipeItem(ItemName.ReinforcedPlate, 1)], 5);
+
+        public static Recipe Any { get; } = new(ItemName.Any, ItemName.Any, 1, 1, 120);
     }
 }

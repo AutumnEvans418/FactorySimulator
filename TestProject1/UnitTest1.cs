@@ -51,5 +51,17 @@ namespace TestProject1
 
             assembler.OutputResources.First().Value.Should().Be(1);
         }
+
+        [Fact]
+        public void Merger_Should_MoveAny()
+        {
+            var merger = new Merge(new Factory(new World()));
+            merger.InputResources.CreateOrAdd(ItemName.IronOre, 1);
+            merger.InputResources.CreateOrAdd(ItemName.CopperOre, 1);
+
+            merger.ProcessResources(merger.Recipes.First());
+
+            merger.OutputResources.Should().HaveCount(2);
+        }
     }
 }
