@@ -18,6 +18,12 @@ namespace ConsoleApp1.Gpt
         }
 
         internal Dictionary<ItemName, int> Node(int node) => game.Node(node);
+
+        public Miner Miner(int node)
+        {
+            var miner = new Miner(game.Node(node), this);
+            return miner;
+        }
     }
 }
 

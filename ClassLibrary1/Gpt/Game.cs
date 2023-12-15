@@ -59,9 +59,7 @@ namespace ConsoleApp1.Gpt
             while (true)
             {
                 ticks++;
-                var f = new Factory(this.world);
-                action(f);
-                SwapFactor(f);
+                Update(action);
                 // Start processing resources for each building
                 foreach (var building in factory.Buildings)
                 {
@@ -78,6 +76,21 @@ namespace ConsoleApp1.Gpt
                 DisplayBuildingChain();
                 Thread.Sleep(500);
             }
+        }
+
+        private void Update(Action<Factory> action)
+        {
+            try
+            {
+                var f = new Factory(this.world);
+                action(f);
+                SwapFactor(f);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
 
         internal void DisplayItems()
@@ -125,6 +138,9 @@ namespace ConsoleApp1.Gpt
                 }
                 else
                 {
+                    var (left, top) = Console.GetCursorPosition();
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(left, top);
                     Console.WriteLine(Output(building.OutputResources));
                 }
             }

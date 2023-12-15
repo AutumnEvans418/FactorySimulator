@@ -12,5 +12,10 @@
         CopperOre,
         CopperIngot,
         ReinforcedPlate,
+
+        CrudeOil,
+        Plastic,
+        HeavyOilResidue,
+        Rubber,
     }
 }

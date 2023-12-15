@@ -94,6 +94,32 @@ namespace ConsoleApp1.Gpt.Buildings
             building.OutputResources = this.OutputResources;
             building.InputResources = this.InputResources;
         }
+
+        public  Merge Merge(Building secondary)
+        {
+            var c = Create(new Merge(this.Game));
+            secondary.AddOutputConveyor(c);
+            return c;
+        }
+
+        public  Assembler Assembler(Recipe recipe)
+            => Create(new Assembler(this.Game, recipe));
+
+        public  Smelter Smelter()
+            => Create(new Smelter(Game));
+
+        public  Split Split()
+            => Create(new Split(this.Game));
+
+        public  Constructor Constructor(Recipe recipe)
+            => Create(new Constructor(this.Game, recipe));
+
+        private  T Create<T>(T create) where T : Building
+        {
+            var building = create;
+            this.AddOutputConveyor(building);
+            return building;
+        }
     }
 }
 

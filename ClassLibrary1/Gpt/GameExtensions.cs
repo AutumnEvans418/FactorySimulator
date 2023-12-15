@@ -16,38 +16,6 @@ namespace ConsoleApp1.Gpt
                 dict.Add(key, add);
             }
         }
-
-        public static Miner Miner(this Factory game, int node)
-        {
-            var miner = new Miner(game.Node(node), game);
-            return miner;
-        }
-
-        public static Merge Merge(this Building building, Building secondary)
-        {
-            var c = Create(building, new Merge(building.Game));
-            secondary.AddOutputConveyor(c);
-            return c;
-        }
-
-        public static Assembler Assembler(this Building building, Recipe recipe)
-            => Create(building, new Assembler(building.Game, recipe));
-
-        public static Smelter Smelter(this Building miner)
-            => Create(miner, new Smelter(miner.Game));
-
-        public static Split Split(this Building building)
-            => Create(building, new Split(building.Game));
-
-        public static Constructor Constructor(this Building building, Recipe recipe) 
-            => Create(building, new Constructor(building.Game, recipe));
-
-        private static T Create<T>(Building prev, T create) where T : Building
-        {
-            var building = create;
-            prev.AddOutputConveyor(building);
-            return building;
-        }
     }
 }
 

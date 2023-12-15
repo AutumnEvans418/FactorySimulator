@@ -7,11 +7,14 @@ namespace TestProject1
 {
     public class UnitTest1
     {
+        Factory factory;
+        public UnitTest1()
+        {
+            factory = new Factory(new World());
+        }
         [Fact]
         public void Miner_Should_Generate1FromNode()
         {
-            var factory = new Factory(new World());
-
             var miner = factory.Miner(0);
 
             miner.InputResources.Count.Should().Be(1);
@@ -25,10 +28,11 @@ namespace TestProject1
             miner.OutputResources.First().Value.Should().Be(1);
         }
 
+        
+
         [Fact]
         public void Constructor_Should_CreateScrews()
         {
-            var factory = new Factory(new World());
             var constructor = new Constructor(factory, RecipeList.Screw);
             constructor.InputResources.CreateOrAdd(ItemName.IronRod, 1);
 
@@ -42,7 +46,7 @@ namespace TestProject1
         [Fact]
         public void Assembler_Should_CreateOneReinforcedPlate()
         {
-            var assembler = new Assembler(new Factory(new World()), RecipeList.ReinforcedPlate);
+            var assembler = new Assembler(factory, RecipeList.ReinforcedPlate);
 
             assembler.InputResources.CreateOrAdd(ItemName.IronPlate, 6);
             assembler.InputResources.CreateOrAdd(ItemName.Screw, 12);
@@ -55,13 +59,23 @@ namespace TestProject1
         [Fact]
         public void Merger_Should_MoveAny()
         {
-            var merger = new Merge(new Factory(new World()));
+            var merger = new Merge(factory);
             merger.InputResources.CreateOrAdd(ItemName.IronOre, 1);
             merger.InputResources.CreateOrAdd(ItemName.CopperOre, 1);
 
             merger.ProcessResources(merger.Recipes.First());
 
             merger.OutputResources.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void Refinery_Should_ProduceTwoOututs()
+        {
+            var refinery = new Refinery(factory, RecipeList.Plastic);
+            refinery.InputResources.CreateOrAdd(ItemName.CrudeOil, 3);
+            refinery.ProcessResources(refinery.Recipes.First());
+
+            refinery.OutputResources.Should().HaveCount(2);
         }
     }
 }
