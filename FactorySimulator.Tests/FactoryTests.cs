@@ -5,10 +5,10 @@ using FluentAssertions;
 
 namespace TestProject1
 {
-    public class UnitTest1
+    public class FactoryTests
     {
         Factory factory;
-        public UnitTest1()
+        public FactoryTests()
         {
             factory = new Factory(new World());
         }

@@ -19,10 +19,10 @@ namespace ConsoleApp1.Gpt
 
                 lua["r"] = recipes;
                 lua["f"] = f;
-                lua.DoString(@"f:Miner(0):Smelter():Constructor(r.IronRod)
-split = f:Miner(0):Split()
-l1 = split:Smelter()
-split:Smelter():Merge(l1):Constructor(r.IronPlate)");
+                lua.DoString(@"
+for i = 1,5 do
+    f:Miner(0):Smelter():Constructor(r.IronRod):Constructor(r.Screw)
+end");
 
                 //var miner = f.Miner(0).Split();
                 

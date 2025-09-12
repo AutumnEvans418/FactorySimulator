@@ -117,6 +117,19 @@ namespace ConsoleApp1.Gpt
 
         internal string Output(IDictionary<ItemName, int> building) => building.Aggregate(string.Empty, (p, f) => p + $"{f.Key} ({f.Value})");
 
+        public static void ClearVisibleRegion()
+        {
+            int cursorTop = Console.CursorTop;
+            int cursorLeft = Console.CursorLeft;
+            for (int y = Console.WindowTop; y < Console.WindowTop + Console.WindowHeight; y++)
+            {
+                Console.SetCursorPosition(Console.WindowLeft, y);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            Console.SetCursorPosition(cursorLeft, cursorTop);
+        }
+
         internal void DisplayBuildingChain()
         {
             void DisplayBuilding(Building building)
@@ -144,6 +157,8 @@ namespace ConsoleApp1.Gpt
                     Console.WriteLine(Output(building.OutputResources));
                 }
             }
+            ClearVisibleRegion();
+
             Console.SetCursorPosition(0, 0);
             foreach (var building in factory.Buildings.Where(b => b.InputConveyors.Count == 0))
             {
