@@ -18,6 +18,8 @@ namespace ConsoleApp1.Gpt.Buildings
         internal List<Building> InputConveyors { get; set; } = new List<Building>();
         internal List<Recipe> Recipes { get; set; } = new List<Recipe>();
         internal Factory Game { get; }
+        private Recipe? SelectedRecipe { get; set; }
+
         public Building(string name, Dictionary<ItemName, int> input, List<Recipe> recipes, Factory game)
         {
             Name = name;
@@ -57,9 +59,39 @@ namespace ConsoleApp1.Gpt.Buildings
             InputConveyors.Add(building);
         }
 
-        internal virtual void ProcessResources(Recipe recipe)
+        public Building Recipe(Recipe recipe)
         {
-            bool canProduce = recipe.Input.All(ri => InputResources.Any(i => i.Key == ri.Item && i.Value >= ri.Quantity));
+            SelectedRecipe = recipe;
+            return this;
+        }
+
+        bool CanProduce(Recipe recipe)
+        {
+            return recipe.Input.All(ri => InputResources.Any(i => i.Key == ri.Item && i.Value >= ri.Quantity));
+        }
+
+        public Recipe? GetRecipe()
+        {
+            return SelectedRecipe ?? Recipes.FirstOrDefault(r => r.Input.All(i => InputConveyors.Any(ic => ic.GetRecipe()?.Output.Any(io => io.Item == i.Item) == true)));
+        }
+
+        public int Rate()
+        {
+            var rates = InputConveyors.Select(c => c.Rate()).ToList();
+
+            return GetRecipe()?.RatePerMinute ?? 0;
+        }
+
+        internal virtual Building ProcessResources()
+        {
+            var recipe1 = GetRecipe();
+            if (recipe1 == null)
+            {
+                return this;
+            }
+            var recipe = recipe1.Value;
+
+            var canProduce = CanProduce(recipe);
 
             if (canProduce)
             {
@@ -75,6 +107,7 @@ namespace ConsoleApp1.Gpt.Buildings
 
                 ProcessConveyors();
             }
+            return this;
         }
 
         private void ProcessConveyors()
@@ -95,26 +128,26 @@ namespace ConsoleApp1.Gpt.Buildings
             building.InputResources = this.InputResources;
         }
 
-        public  Merge Merge(Building secondary)
+        public Merge Merge(Building secondary)
         {
             var c = Create(new Merge(this.Game));
             secondary.AddOutputConveyor(c);
             return c;
         }
 
-        public  Assembler Assembler(Recipe recipe)
+        public Assembler Assembler(Recipe recipe)
             => Create(new Assembler(this.Game, recipe));
 
-        public  Smelter Smelter()
+        public Smelter Smelter()
             => Create(new Smelter(Game));
 
-        public  Split Split()
+        public Split Split()
             => Create(new Split(this.Game));
 
-        public  Constructor Constructor(Recipe recipe)
+        public Constructor Constructor(Recipe recipe)
             => Create(new Constructor(this.Game, recipe));
 
-        private  T Create<T>(T create) where T : Building
+        private T Create<T>(T create) where T : Building
         {
             var building = create;
             this.AddOutputConveyor(building);

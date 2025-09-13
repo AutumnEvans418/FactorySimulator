@@ -11,7 +11,7 @@ namespace ClassLibrary1.Gpt.Item
         /// <summary>
         /// The input production rate
         /// </summary>
-        public int ProductionRate { get; }
+        public int RatePerMinute { get; }
 
         /// <summary>
         /// 
@@ -25,14 +25,14 @@ namespace ClassLibrary1.Gpt.Item
         {
             Input = [new RecipeItem(inputResource, inputQuantity)];
             Output = [new RecipeItem(outputResource, outputQuantity)];
-            ProductionRate = rate;
+            RatePerMinute = rate;
         }
 
         public Recipe(RecipeItem[] input, RecipeItem[] output, int rate)
         {
             Input = input;
             Output = output;
-            ProductionRate = rate;
+            RatePerMinute = rate;
         }
     }
 }

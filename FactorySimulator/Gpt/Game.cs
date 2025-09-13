@@ -1,24 +1,5 @@
-﻿using ClassLibrary1.Gpt.Item;
-using ConsoleApp1.Gpt.Buildings;
-
-namespace ConsoleApp1.Gpt
+﻿namespace ConsoleApp1.Gpt
 {
-    public class World
-    {
-        public World()
-        {
-            Nodes =
-            [
-               new Dictionary<ItemName, int> { { ItemName.IronOre, int.MaxValue } }
-            ];
-        }
-        internal Dictionary<ItemName, int>[] Nodes { get; set; }
-        internal Dictionary<ItemName, int> Node(int node)
-        {
-            return Nodes[node];
-        }
-    }
-
     public class Game
     {
         public Game()
@@ -27,9 +8,11 @@ namespace ConsoleApp1.Gpt
             factory = new(world);
         }
 
-        private Factory factory;
-        private World world;
-        
+        internal Factory factory;
+        internal World world;
+        public Action? OnUpdate { get; set; }
+        public int UpdateSpeedMilliseconds { get; set; } = 500;
+
         internal void SwapFactor(Factory newFactory)
         {
             for (int i = 0; i < newFactory.Buildings.Count; i++)
@@ -63,18 +46,17 @@ namespace ConsoleApp1.Gpt
                 // Start processing resources for each building
                 foreach (var building in factory.Buildings)
                 {
-                    foreach (var recipe in building.Recipes)
-                    {
-                        var when = 120 / recipe.ProductionRate;
+                    var recipe = building.GetRecipe();
 
-                        if (ticks % when == 0)
-                        {
-                            building.ProcessResources(recipe);
-                        }
+                    var when = 120 / recipe?.RatePerMinute;
+
+                    if (ticks % when == 0)
+                    {
+                        building.ProcessResources();
                     }
                 }
-                DisplayBuildingChain();
-                Thread.Sleep(500);
+                OnUpdate?.Invoke();
+                Thread.Sleep(UpdateSpeedMilliseconds);
             }
         }
 
@@ -93,81 +75,7 @@ namespace ConsoleApp1.Gpt
             
         }
 
-        internal void DisplayItems()
-        {
-            var totalItem = new Dictionary<ItemName, int>();
-
-            foreach (var building in factory.Buildings)
-            {
-                var resources = building.OutputResources.AsEnumerable();
-                if (world.Nodes.All(n => n != building.InputResources))
-                {
-                    resources = resources.Union(building.InputResources);
-                }
-                foreach (var item in resources)
-                {
-                    totalItem.CreateOrAdd(item.Key, item.Value);
-                }
-            }
-            foreach (var item in totalItem)
-            {
-                Console.WriteLine($"{item.Key}: {item.Value}");
-            }
-        }
-
-        internal string Output(IDictionary<ItemName, int> building) => building.Aggregate(string.Empty, (p, f) => p + $"{f.Key} ({f.Value})");
-
-        public static void ClearVisibleRegion()
-        {
-            int cursorTop = Console.CursorTop;
-            int cursorLeft = Console.CursorLeft;
-            for (int y = Console.WindowTop; y < Console.WindowTop + Console.WindowHeight; y++)
-            {
-                Console.SetCursorPosition(Console.WindowLeft, y);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
-
-            Console.SetCursorPosition(cursorLeft, cursorTop);
-        }
-
-        internal void DisplayBuildingChain()
-        {
-            void DisplayBuilding(Building building)
-            {
-                Console.Write(building.Name);
-                Console.Write("->");
-
-                if (building.OutputConveyors.Any())
-                {
-                    var (left, top) = Console.GetCursorPosition();
-                    for (int i = 0; i < building.OutputConveyors.Count; i++)
-                    {
-                        Console.Write(new string(' ', Console.BufferWidth));
-                        Console.SetCursorPosition(left, top + i);
-                        var conveyor = building.OutputConveyors[i];
-                        Console.Write(Output(conveyor.InputResources) + "->");
-                        DisplayBuilding(conveyor);
-                    }
-                }
-                else
-                {
-                    var (left, top) = Console.GetCursorPosition();
-                    Console.Write(new string(' ', Console.BufferWidth));
-                    Console.SetCursorPosition(left, top);
-                    Console.WriteLine(Output(building.OutputResources));
-                }
-            }
-            ClearVisibleRegion();
-
-            Console.SetCursorPosition(0, 0);
-            foreach (var building in factory.Buildings.Where(b => b.InputConveyors.Count == 0))
-            {
-                DisplayBuilding(building);
-            }
-            Console.WriteLine();
-            DisplayItems();
-        }
-
+        
        
     }
 }

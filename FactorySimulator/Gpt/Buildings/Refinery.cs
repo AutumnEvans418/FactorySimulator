@@ -2,9 +2,9 @@
 
 namespace ConsoleApp1.Gpt.Buildings
 {
-    public class Constructor : Building
+    public class Refinery : Building
     {
-        public Constructor(Factory game, Recipe recipe) : base("Constructor", game)
+        public Refinery(Factory game, Recipe recipe) : base("Refinery", game)
         {
             Recipes.Add(recipe);
             Recipe(recipe);

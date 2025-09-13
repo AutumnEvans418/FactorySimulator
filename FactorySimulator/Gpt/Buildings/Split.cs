@@ -2,50 +2,6 @@
 
 namespace ConsoleApp1.Gpt.Buildings
 {
-    public class Refinery : Building
-    {
-        public Refinery(Factory game, Recipe recipe) : base("Refinery", game)
-        {
-            Recipes.Add(recipe);
-        }
-    }
-
-    public class Merge : Building
-    {
-        public Merge(Factory game) : base("Merger", game)
-        {
-            Recipes.Add(RecipeList.Any);
-        }
-
-        internal override void ProcessResources(Recipe recipe)
-        {
-            bool canProduce = InputResources.Any(i => i.Value > 0);
-
-            if (canProduce)
-            {
-                foreach (var item in InputResources)
-                {
-                    InputResources[item.Key]--;
-                    OutputResources.CreateOrAdd(item.Key, 1);
-                }
-
-                ProcessConveyors();
-            }
-            base.ProcessResources(recipe);
-        }
-
-        private void ProcessConveyors()
-        {
-            foreach (var conveyors in OutputConveyors)
-            {
-                foreach (var output in OutputResources)
-                {
-                    conveyors.InputResources.CreateOrAdd(output.Key, output.Value);
-                    OutputResources[output.Key] = 0;
-                }
-            }
-        }
-    }
 
     public class Split : Building
     {
@@ -65,7 +21,7 @@ namespace ConsoleApp1.Gpt.Buildings
             base.CopyTo(building);
         }
 
-        internal override void ProcessResources(Recipe recipe)
+        internal override Building ProcessResources()
         {
             bool canProduce = InputResources.Any(i => i.Value > 0);
 
@@ -79,7 +35,7 @@ namespace ConsoleApp1.Gpt.Buildings
 
                 ProcessConveyors();
             }
-            base.ProcessResources(recipe);
+            return base.ProcessResources();
         }
 
         private void ProcessConveyors()

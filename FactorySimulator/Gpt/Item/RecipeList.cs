@@ -21,5 +21,8 @@ namespace ClassLibrary1.Gpt.Item
 
         public static Recipe Plastic { get; } = new([new(ItemName.CrudeOil, 3)], [new(ItemName.Plastic, 2), new(ItemName.HeavyOilResidue, 1)], 10);
         public static Recipe Rubber { get; } = new([new(ItemName.CrudeOil, 3)], [new(ItemName.Rubber, 2), new(ItemName.HeavyOilResidue, 2)], 10);
+
+        public static Recipe IronIngot { get; } = new Recipe(ItemName.IronOre, ItemName.IronIngot, 1, 1, 30);
+        public static Recipe CopperIngot { get; } = new Recipe(ItemName.CopperOre, ItemName.CopperIngot, 1, 1, 30);
     }
 }

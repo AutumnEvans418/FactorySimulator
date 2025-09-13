@@ -12,6 +12,21 @@ namespace TestProject1
         {
             factory = new Factory(new World());
         }
+
+        [Fact]
+        public void Factory_Miner_Speed_ShouldBe()
+        {
+            factory.Miner(0).Rate().Should().Be(60);
+        }
+
+        [Fact]
+        public void Factory_Smelter_Speed_ShouldBe()
+        {
+            factory.Miner(0).Smelter().GetRecipe().Should().BeEquivalentTo(RecipeList.IronIngot);
+
+            factory.Miner(0).Smelter().Rate().Should().Be(30);
+        }
+
         [Fact]
         public void Miner_Should_Generate1FromNode()
         {
@@ -22,13 +37,11 @@ namespace TestProject1
 
             miner.OutputResources.Count.Should().Be(0);
 
-            miner.ProcessResources(miner.Recipes.First());
+            miner.ProcessResources();
 
             miner.InputResources.First().Value.Should().Be(int.MaxValue - 1);
             miner.OutputResources.First().Value.Should().Be(1);
         }
-
-        
 
         [Fact]
         public void Constructor_Should_CreateScrews()
@@ -38,7 +51,7 @@ namespace TestProject1
 
             constructor.OutputResources.Should().HaveCount(0);
             
-            constructor.ProcessResources(constructor.Recipes.First());
+            constructor.ProcessResources();
 
             constructor.OutputResources.First().Value.Should().Be(4);
         }
@@ -51,7 +64,7 @@ namespace TestProject1
             assembler.InputResources.CreateOrAdd(ItemName.IronPlate, 6);
             assembler.InputResources.CreateOrAdd(ItemName.Screw, 12);
 
-            assembler.ProcessResources(assembler.Recipes.First());
+            assembler.ProcessResources();
 
             assembler.OutputResources.First().Value.Should().Be(1);
         }
@@ -63,7 +76,7 @@ namespace TestProject1
             merger.InputResources.CreateOrAdd(ItemName.IronOre, 1);
             merger.InputResources.CreateOrAdd(ItemName.CopperOre, 1);
 
-            merger.ProcessResources(merger.Recipes.First());
+            merger.ProcessResources();
 
             merger.OutputResources.Should().HaveCount(2);
         }
@@ -73,7 +86,7 @@ namespace TestProject1
         {
             var refinery = new Refinery(factory, RecipeList.Plastic);
             refinery.InputResources.CreateOrAdd(ItemName.CrudeOil, 3);
-            refinery.ProcessResources(refinery.Recipes.First());
+            refinery.ProcessResources();
 
             refinery.OutputResources.Should().HaveCount(2);
         }

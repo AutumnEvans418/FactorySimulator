@@ -13,6 +13,9 @@ namespace ConsoleApp1.Gpt
             using var lua = new Lua();
             var recipes = new RecipeList();
             var game = new Game();
+
+            var console = new GameConsole(game);
+
             game.StartGame(f =>
             {
                 count++;
@@ -23,13 +26,6 @@ namespace ConsoleApp1.Gpt
 for i = 1,5 do
     f:Miner(0):Smelter():Constructor(r.IronRod):Constructor(r.Screw)
 end");
-
-                //var miner = f.Miner(0).Split();
-                
-                //var screws = miner.Smelter().Constructor(RecipeList.IronRod).Constructor(RecipeList.Screw);
-                //miner.Smelter().Constructor(RecipeList.IronPlate).Merge(screws).Assembler(RecipeList.ReinforcedPlate);
-
-
             });
         }
     } 
