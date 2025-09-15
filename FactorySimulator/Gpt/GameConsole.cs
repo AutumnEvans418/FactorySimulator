@@ -70,10 +70,7 @@ namespace ConsoleApp1.Gpt
             foreach (var building in game.factory.Buildings)
             {
                 var resources = building.OutputResources.AsEnumerable();
-                if (game.world.Nodes.All(n => n != building.InputResources))
-                {
-                    resources = resources.Union(building.InputResources);
-                }
+                resources = resources.Union(building.InputResources);
                 foreach (var item in resources)
                 {
                     totalItem.CreateOrAdd(item.Key, item.Value);

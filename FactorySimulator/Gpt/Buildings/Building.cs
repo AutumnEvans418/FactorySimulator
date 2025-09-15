@@ -11,6 +11,7 @@ namespace ConsoleApp1.Gpt.Buildings
 
     public class Building
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         internal string Name { get; set; }
         internal Dictionary<ItemName, int> InputResources { get; set; }
         internal Dictionary<ItemName, int> OutputResources { get; set; }

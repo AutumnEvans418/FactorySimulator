@@ -3,9 +3,10 @@ using ConsoleApp1.Gpt.Buildings;
 
 namespace ConsoleApp1.Gpt
 {
+
     public class Factory
     {
-        private readonly World game;
+        public readonly World game;
 
         public Factory(World game)
         {
@@ -17,11 +18,16 @@ namespace ConsoleApp1.Gpt
             Buildings.Add(building);
         }
 
-        internal Dictionary<ItemName, int> Node(int node) => game.Node(node);
-
         public Miner Miner(int node)
         {
-            var miner = new Miner(game.Node(node), this);
+            var nodeMaterial = game.Node(node);
+
+            //if (nodeMaterial.Building is Miner m)
+            //{
+            //    return m;
+            //}
+
+            var miner = new Miner(nodeMaterial, this);
             return miner;
         }
     }

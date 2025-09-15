@@ -14,6 +14,14 @@ namespace TestProject1
         }
 
         [Fact]
+        public void CreateMinerOnSameNode_ShouldBeSame()
+        {
+            var miner1 = factory.Miner(0);
+            var miner2 = factory.Miner(0);
+            miner1.Id.Should().Be(miner2.Id);
+        }
+
+        [Fact]
         public void Factory_Miner_Speed_ShouldBe()
         {
             factory.Miner(0).Rate().Should().Be(60);

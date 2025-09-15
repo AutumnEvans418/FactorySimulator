@@ -4,11 +4,12 @@ namespace ConsoleApp1.Gpt.Buildings
 {
     public class Miner : Building
     {
-        public Miner(Dictionary<ItemName, int> input, Factory game) : base("Miner", input, game)
+        public Miner(MaterialNode input, Factory game) : base("Miner", input.ToInput(), game)
         {
+            input.Building = this;
             Recipes.Add(new Recipe(ItemName.IronOre, ItemName.IronOre, 1, 1, 60));
 
-            Recipe(Recipes.First(r => r.Input.First().Item == input.First().Key));
+            Recipe(Recipes.First(r => r.Input.First().Item == input.Item));
         }
     }
 }

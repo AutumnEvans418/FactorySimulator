@@ -8,11 +8,15 @@ namespace ConsoleApp1.Gpt
         {
             Nodes =
             [
-               new Dictionary<ItemName, int> { { ItemName.IronOre, int.MaxValue } }
+               new MaterialNode{
+                    Item=ItemName.IronOre,
+                    Quantity=int.MaxValue,
+                    Speed = 1
+               }
             ];
         }
-        internal Dictionary<ItemName, int>[] Nodes { get; set; }
-        internal Dictionary<ItemName, int> Node(int node)
+        internal MaterialNode[] Nodes { get; set; }
+        internal MaterialNode Node(int node)
         {
             return Nodes[node];
         }

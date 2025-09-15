@@ -22,10 +22,7 @@ namespace ConsoleApp1.Gpt
 
                 lua["r"] = recipes;
                 lua["f"] = f;
-                lua.DoString(@"
-for i = 1,5 do
-    f:Miner(0):Smelter():Constructor(r.IronRod):Constructor(r.Screw)
-end");
+                lua.DoString(@"f:Miner(0):Smelter():Constructor(r.IronRod):Constructor(r.Screw)");
             });
         }
     } 

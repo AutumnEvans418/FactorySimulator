@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactorySimulator.Game", "Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactorySimulator.Tests", "FactorySimulator.Tests\FactorySimulator.Tests.csproj", "{B6B1020C-A5AD-5C87-C62D-D8AF14EF01E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactorySimulator.Web", "FactorySimulator.Web\FactorySimulator.Web.csproj", "{F13926C2-D636-4ECD-8601-02E59F922B8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B6B1020C-A5AD-5C87-C62D-D8AF14EF01E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6B1020C-A5AD-5C87-C62D-D8AF14EF01E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6B1020C-A5AD-5C87-C62D-D8AF14EF01E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
