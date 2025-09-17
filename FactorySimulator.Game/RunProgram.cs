@@ -11,7 +11,7 @@ namespace ConsoleApp1.Gpt
         {
             var count = 0;
             using var lua = new Lua();
-            var recipes = new RecipeList();
+            var recipes = new Recipe.List();
             var game = new Game();
 
             var console = new GameConsole(game);

@@ -8,7 +8,6 @@ using ClassLibrary1.Gpt.Item;
 
 namespace ConsoleApp1.Gpt.Buildings
 {
-
     public class Building
     {
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -60,7 +59,7 @@ namespace ConsoleApp1.Gpt.Buildings
             InputConveyors.Add(building);
         }
 
-        public Building Recipe(Recipe recipe)
+        public Building SetRecipe(Recipe recipe)
         {
             SelectedRecipe = recipe;
             return this;
@@ -76,11 +75,11 @@ namespace ConsoleApp1.Gpt.Buildings
             return SelectedRecipe ?? Recipes.FirstOrDefault(r => r.Input.All(i => InputConveyors.Any(ic => ic.GetRecipe()?.Output.Any(io => io.Item == i.Item) == true)));
         }
 
-        public int Rate()
+        public float Rate()
         {
             var rates = InputConveyors.Select(c => c.Rate()).ToList();
 
-            return GetRecipe()?.RatePerMinute ?? 0;
+            return GetRecipe()?.TicksRate ?? 0;
         }
 
         internal virtual Building ProcessResources()
@@ -142,8 +141,8 @@ namespace ConsoleApp1.Gpt.Buildings
         public Smelter Smelter()
             => Create(new Smelter(Game));
 
-        public Split Split()
-            => Create(new Split(this.Game));
+        public Split Split(params Action<Split>[] actions)
+            => Create(new Split(this.Game, actions));
 
         public Constructor Constructor(Recipe recipe)
             => Create(new Constructor(this.Game, recipe));

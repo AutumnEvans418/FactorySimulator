@@ -7,7 +7,7 @@ namespace ConsoleApp1.Gpt.Buildings
         public Refinery(Factory game, Recipe recipe) : base("Refinery", game)
         {
             Recipes.Add(recipe);
-            Recipe(recipe);
+            SetRecipe(recipe);
         }
     }
 }

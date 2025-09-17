@@ -43,18 +43,7 @@
             {
                 ticks++;
                 Update(action);
-                // Start processing resources for each building
-                foreach (var building in factory.Buildings)
-                {
-                    var recipe = building.GetRecipe();
-
-                    var when = 120 / recipe?.RatePerMinute;
-
-                    if (ticks % when == 0)
-                    {
-                        building.ProcessResources();
-                    }
-                }
+                factory.ProcessResources(ticks);
                 OnUpdate?.Invoke();
                 Thread.Sleep(UpdateSpeedMilliseconds);
             }
@@ -72,11 +61,7 @@
             {
                 Console.WriteLine(e.Message);
             }
-            
         }
-
-        
-       
     }
 }
 

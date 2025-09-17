@@ -22,13 +22,30 @@ namespace ConsoleApp1.Gpt
         {
             var nodeMaterial = game.Node(node);
 
-            //if (nodeMaterial.Building is Miner m)
-            //{
-            //    return m;
-            //}
+            var existingMiner = Buildings.OfType<Miner>().FirstOrDefault(m => m.Node == nodeMaterial.Id);
+            if (existingMiner != null)
+            {
+                return existingMiner;
+            }
 
             var miner = new Miner(nodeMaterial, this);
             return miner;
+        }
+
+        public void ProcessResources(int ticks)
+        {
+            // Start processing resources for each building
+            foreach (var building in Buildings)
+            {
+                var recipe = building.GetRecipe();
+
+                var when = recipe?.TicksRate;
+
+                if (ticks % when == 0)
+                {
+                    building.ProcessResources();
+                }
+            }
         }
     }
 }

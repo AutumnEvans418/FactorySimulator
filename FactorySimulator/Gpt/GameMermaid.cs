@@ -1,5 +1,5 @@
-﻿using ClassLibrary1.Gpt.Item;
-using ConsoleApp1.Gpt;
+﻿using ConsoleApp1.Gpt;
+using ConsoleApp1.Gpt.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +8,6 @@ using System.Threading.Tasks;
 
 namespace FactorySimulator.Gpt
 {
-    public class DefaultFactories
-    {
-        public static Factory BasicScrewFactory(World game)
-        {
-            var factory = new Factory(game);
-            factory.Miner(0).Smelter().Constructor(RecipeList.IronRod).Constructor(RecipeList.Screw);
-            return factory;
-        }
-    }
 
     public class GameMermaid
     {
@@ -24,7 +15,7 @@ namespace FactorySimulator.Gpt
         {
             game.OnUpdate = () =>
             {
-                
+
             };
         }
 
@@ -39,10 +30,17 @@ namespace FactorySimulator.Gpt
 
             foreach (var building in factory.Buildings)
             {
-                builder.AppendLine($"N{building.Id}[\"{building.Name} ({string.Join(",", building.GetRecipe()?.Output.Select(o => o.Item) ?? [])})\"]");
+                if (building is INodeProcessor np)
+                {
+                    builder.AppendLine($"N{np.Node} --> N{building.Id}");
+                }
+                var recipe = building.GetRecipe();
+                var outputs = string.Join(",", recipe?.Output.Select(o => $"{o.Item} {recipe?.Speed(o)}ipm") ?? []);
+                var inputs = string.Join(",", recipe?.Input.Select(o => $"{o.Item} {recipe?.Speed(o)}ipm") ?? []);
+                builder.AppendLine($"N{building.Id}[\"{building.Name} ({inputs})-->({outputs})\"]");
             }
 
-            foreach(var building in factory.Buildings)
+            foreach (var building in factory.Buildings)
             {
                 foreach (var output in building.OutputConveyors)
                 {

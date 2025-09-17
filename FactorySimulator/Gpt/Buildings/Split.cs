@@ -5,9 +5,13 @@ namespace ConsoleApp1.Gpt.Buildings
 
     public class Split : Building
     {
-        public Split(Factory game) : base("Splitter", game)
+        public Split(Factory game, Action<Split>[] actions) : base("Splitter", game)
         {
-            Recipes.Add(RecipeList.Any);
+            Recipes.Add(Recipe.List.Any);
+            foreach (var action in actions)
+            {
+                action(this);
+            }
         }
 
         int tick;

@@ -6,7 +6,7 @@ namespace ConsoleApp1.Gpt.Buildings
     {
         public Merge(Factory game) : base("Merger", game)
         {
-            Recipes.Add(RecipeList.Any);
+            Recipes.Add(Recipe.List.Any);
         }
 
         internal override Building ProcessResources()

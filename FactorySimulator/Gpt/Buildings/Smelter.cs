@@ -6,8 +6,8 @@ namespace ConsoleApp1.Gpt.Buildings
     {
         public Smelter(Factory game) : base("Smelter", game)
         {
-            Recipes.Add(RecipeList.IronIngot);
-            Recipes.Add(RecipeList.CopperIngot);
+            Recipes.Add(Recipe.List.IronIngot);
+            Recipes.Add(Recipe.List.CopperIngot);
         }
     }
 }
