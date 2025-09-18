@@ -7,7 +7,7 @@ namespace ConsoleApp1.Gpt
     public class Factory
     {
         public readonly World game;
-
+        public int Ticks { get; set; }
         public Factory(World game)
         {
             this.game = game;
@@ -32,8 +32,10 @@ namespace ConsoleApp1.Gpt
             return miner;
         }
 
-        public void ProcessResources(int ticks)
+        public void ProcessResources()
         {
+            Ticks++;
+
             // Start processing resources for each building
             foreach (var building in Buildings)
             {
@@ -41,11 +43,13 @@ namespace ConsoleApp1.Gpt
 
                 var when = recipe?.TicksRate;
 
-                if (ticks % when == 0)
+                if (Ticks % when == 0)
                 {
                     building.ProcessResources();
                 }
             }
+
+
         }
     }
 }

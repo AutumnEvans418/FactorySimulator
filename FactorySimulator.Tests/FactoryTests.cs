@@ -23,10 +23,23 @@ namespace TestProject1
             factory.Buildings.OfType<Miner>().Should().HaveCount(1);
             factory.Buildings.OfType<Smelter>().Should().HaveCount(2);
 
-            factory.ProcessResources(1);
-            var smelters = factory.Buildings.OfType<Smelter>().First();
-            smelters.InputResources.Should().HaveCount(1);
-            smelters.InputResources.First().Value.Should().Be(1);
+            factory.ProcessResources();
+            var smelters = factory.Buildings.OfType<Smelter>().ToList();
+            smelters[0].InputResources.Should().HaveCount(0);
+
+            smelters[1].InputResources.Should().HaveCount(1);
+            smelters[1].InputResources.First().Value.Should().Be(1);
+
+            factory.ProcessResources();
+
+            smelters[0].InputResources.Should().HaveCount(1);
+            smelters[0].InputResources.First().Value.Should().Be(0);
+            smelters[0].OutputResources.First().Value.Should().Be(1);
+
+            smelters[1].InputResources.Should().HaveCount(1);
+            smelters[1].InputResources.First().Value.Should().Be(0);
+            smelters[1].OutputResources.First().Value.Should().Be(1);
+
         }
 
         [Fact]

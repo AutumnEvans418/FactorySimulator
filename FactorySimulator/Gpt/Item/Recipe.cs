@@ -17,7 +17,7 @@ namespace ClassLibrary1.Gpt.Item
                     [new(ItemName.Screw, 12), new(ItemName.IronPlate, 6)],
                     [new(ItemName.ReinforcedPlate, 1)], 5);
 
-            public static Recipe Any { get; } = new(ItemName.Any, ItemName.Any, 1, 1, 120);
+            public static Recipe Any { get; } = new(ItemName.Any, ItemName.Any, 1, 1, 1);
 
             public static Recipe Plastic { get; } = new([new(ItemName.CrudeOil, 3)], [new(ItemName.Plastic, 2), new(ItemName.HeavyOilResidue, 1)], 10);
             public static Recipe Rubber { get; } = new([new(ItemName.CrudeOil, 3)], [new(ItemName.Rubber, 2), new(ItemName.HeavyOilResidue, 2)], 10);
@@ -59,6 +59,14 @@ namespace ClassLibrary1.Gpt.Item
         public float Speed(RecipeItem recipeItem)
         {
             return 60 / TicksRate * recipeItem.Quantity;
+        }
+
+        public override string ToString()
+        {
+            var inputs = string.Join(", ", Input.Select(i => $"{i.Quantity} {i.Item}s"));
+            var outputs = string.Join(", ", Output.Select(i => $"{i.Quantity} {i.Item}s"));
+            
+            return $"{inputs} => {outputs} @ {TicksRate} ticks";
         }
     }
 }

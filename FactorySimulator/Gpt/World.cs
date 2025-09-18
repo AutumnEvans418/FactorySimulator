@@ -8,7 +8,7 @@ namespace ConsoleApp1.Gpt
         {
             Nodes =
             [
-               new MaterialNode{
+               new MaterialNode {
                     Item=ItemName.IronOre,
                     Quantity=int.MaxValue,
                     Speed = 1

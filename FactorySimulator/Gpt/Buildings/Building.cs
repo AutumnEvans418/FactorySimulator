@@ -16,9 +16,9 @@ namespace ConsoleApp1.Gpt.Buildings
         internal Dictionary<ItemName, int> OutputResources { get; set; }
         internal List<Building> OutputConveyors { get; set; } = new List<Building>();
         internal List<Building> InputConveyors { get; set; } = new List<Building>();
-        internal List<Recipe> Recipes { get; set; } = new List<Recipe>();
         internal Factory Game { get; }
         private Recipe? SelectedRecipe { get; set; }
+        protected List<Recipe> Recipes { get; set; } = new List<Recipe>();
 
         public Building(string name, Dictionary<ItemName, int> input, List<Recipe> recipes, Factory game)
         {
@@ -70,7 +70,7 @@ namespace ConsoleApp1.Gpt.Buildings
             return recipe.Input.All(ri => InputResources.Any(i => i.Key == ri.Item && i.Value >= ri.Quantity));
         }
 
-        public Recipe? GetRecipe()
+        public virtual Recipe? GetRecipe()
         {
             return SelectedRecipe ?? Recipes.FirstOrDefault(r => r.Input.All(i => InputConveyors.Any(ic => ic.GetRecipe()?.Output.Any(io => io.Item == i.Item) == true)));
         }
@@ -152,6 +152,13 @@ namespace ConsoleApp1.Gpt.Buildings
             var building = create;
             this.AddOutputConveyor(building);
             return building;
+        }
+
+        public override string ToString()
+        {
+            var inputs = string.Join(", ", InputResources.Select(i => $"{i.Value} {i.Key}s"));
+            var outputs = string.Join(", ", OutputResources.Select(i => $"{i.Value} {i.Key}s"));
+            return $"{inputs} -|{Name}|-> {outputs}";
         }
     }
 }

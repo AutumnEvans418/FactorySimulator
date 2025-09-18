@@ -32,18 +32,17 @@
 
                 oldBuilding.CopyTo(newBuilding);
             }
+            var ticks = factory.Ticks;
             factory = newFactory;
+            factory.Ticks = ticks;
         }
 
         public void StartGame(Action<Factory> action)
         {
-            var ticks = 0;
-
             while (true)
             {
-                ticks++;
                 Update(action);
-                factory.ProcessResources(ticks);
+                factory.ProcessResources();
                 OnUpdate?.Invoke();
                 Thread.Sleep(UpdateSpeedMilliseconds);
             }

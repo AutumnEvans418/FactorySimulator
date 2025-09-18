@@ -7,7 +7,6 @@ namespace ConsoleApp1.Gpt.Buildings
     {
         public Split(Factory game, Action<Split>[] actions) : base("Splitter", game)
         {
-            Recipes.Add(Recipe.List.Any);
             foreach (var action in actions)
             {
                 action(this);
@@ -15,6 +14,11 @@ namespace ConsoleApp1.Gpt.Buildings
         }
 
         int tick;
+
+        public override Recipe? GetRecipe()
+        {
+            return InputConveyors.FirstOrDefault()?.GetRecipe();
+        }
 
         public override void CopyTo(Building building)
         {
