@@ -1,5 +1,6 @@
 ﻿using ClassLibrary1.Gpt.Item;
 using ConsoleApp1.Gpt;
+using ConsoleApp1.Gpt.Buildings;
 
 namespace FactorySimulator.Gpt
 {
@@ -19,6 +20,19 @@ namespace FactorySimulator.Gpt
                 s => s.Smelter(), 
                 s => s.Smelter());
             return factory;
+        }
+
+        public static Building IronRodFactory(Building building)
+        {
+            return building.Split(
+                s => s.Smelter().Split(
+                    sm => sm.Constructor(Recipe.List.IronRod),
+                    sm => sm.Constructor(Recipe.List.IronRod)
+                    ).Merge(),
+                s => s.Smelter().Split(
+                    sm => sm.Constructor(Recipe.List.IronRod),
+                    sm => sm.Constructor(Recipe.List.IronRod)
+                    ).Merge()).Merge();
         }
     }
 }

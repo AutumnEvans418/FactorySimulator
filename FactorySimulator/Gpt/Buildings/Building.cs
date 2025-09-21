@@ -8,7 +8,35 @@ using ClassLibrary1.Gpt.Item;
 
 namespace ConsoleApp1.Gpt.Buildings
 {
-    public class Building
+    public partial class Building
+    {
+        public Merge Merge(params Building[] secondary)
+        {
+            var c = Create(new Merge(this.Game));
+            foreach (var item in secondary)
+            {
+                item.AddOutputConveyor(c);
+            }
+            return c;
+        }
+
+        public Assembler Assembler(Recipe recipe)
+            => Create(new Assembler(this.Game, recipe));
+
+        public Smelter Smelter()
+            => Create(new Smelter(Game));
+
+        public BuildingList Split(params Action<Split>[] actions)
+        {
+            var split = Create(new Split(this.Game, actions));
+            return new BuildingList(split.OutputConveyors);
+        }
+
+        public Constructor Constructor(Recipe recipe)
+            => Create(new Constructor(this.Game, recipe));
+    }
+
+    public partial class Building
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         internal string Name { get; set; }
@@ -128,24 +156,6 @@ namespace ConsoleApp1.Gpt.Buildings
             building.InputResources = this.InputResources;
         }
 
-        public Merge Merge(Building secondary)
-        {
-            var c = Create(new Merge(this.Game));
-            secondary.AddOutputConveyor(c);
-            return c;
-        }
-
-        public Assembler Assembler(Recipe recipe)
-            => Create(new Assembler(this.Game, recipe));
-
-        public Smelter Smelter()
-            => Create(new Smelter(Game));
-
-        public Split Split(params Action<Split>[] actions)
-            => Create(new Split(this.Game, actions));
-
-        public Constructor Constructor(Recipe recipe)
-            => Create(new Constructor(this.Game, recipe));
 
         private T Create<T>(T create) where T : Building
         {

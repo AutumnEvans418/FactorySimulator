@@ -2,7 +2,6 @@
 
 namespace ConsoleApp1.Gpt.Buildings
 {
-
     public class Split : Building
     {
         public Split(Factory game, Action<Split>[] actions) : base("Splitter", game)
