@@ -1,4 +1,4 @@
-﻿namespace ClassLibrary1.Gpt.Item
+﻿namespace FactorySimulator.Factories.Items
 {
     public enum ItemName
     {

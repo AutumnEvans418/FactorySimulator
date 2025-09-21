@@ -12,5 +12,8 @@
     <PackageReference Include="CS-Script" Version="4.11.0" />
     <PackageReference Include="NLua" Version="1.6.3" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripting\" />
+  </ItemGroup>
 
 </Project>

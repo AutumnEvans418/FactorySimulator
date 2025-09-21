@@ -1,34 +1,34 @@
-﻿using ConsoleApp1.Gpt;
-using ConsoleApp1.Gpt.Buildings;
+﻿using FactorySimulator.Factories;
+using FactorySimulator.Factories.Buildings.Base;
+using FactorySimulator.GameWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FactorySimulator.Gpt
+namespace FactorySimulator.Display
 {
 
     public class GameMermaid
     {
+        private readonly Game game;
+
         public GameMermaid(Game game)
         {
-            game.OnUpdate = () =>
-            {
-
-            };
+            this.game = game;
         }
 
-        public static string DisplayFactory(Factory factory)
+        public string DisplayFactory()
         {
             var builder = new StringBuilder();
             builder.AppendLine("graph LR");
-            foreach (var node in factory.game.Nodes)
+            foreach (var node in game.world.Nodes)
             {
                 builder.AppendLine($"N{node.Id}[{node.Item}]");
             }
 
-            foreach (var building in factory.Buildings)
+            foreach (var building in game.factory.Buildings)
             {
                 if (building is INodeProcessor np)
                 {
@@ -40,7 +40,7 @@ namespace FactorySimulator.Gpt
                 builder.AppendLine($"N{building.Id}[\"{building.Name} ({inputs})-->({outputs})\"]");
             }
 
-            foreach (var building in factory.Buildings)
+            foreach (var building in game.factory.Buildings)
             {
                 foreach (var output in building.OutputConveyors)
                 {

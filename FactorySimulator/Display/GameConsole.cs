@@ -1,7 +1,9 @@
-﻿using ClassLibrary1.Gpt.Item;
-using ConsoleApp1.Gpt.Buildings;
+﻿using FactorySimulator.Factories;
+using FactorySimulator.Factories.Buildings;
+using FactorySimulator.Factories.Items;
+using FactorySimulator.GameWorld;
 
-namespace ConsoleApp1.Gpt
+namespace FactorySimulator.Display
 {
     public class GameConsole
     {

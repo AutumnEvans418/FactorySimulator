@@ -1,8 +1,9 @@
-﻿using ClassLibrary1.Gpt.Item;
-using ConsoleApp1.Gpt.Buildings;
+﻿using FactorySimulator.Display;
+using FactorySimulator.Factories.Items;
+using FactorySimulator.GameWorld;
 using NLua;
 
-namespace ConsoleApp1.Gpt
+namespace FactorySimulator.Game
 {
     public static class RunProgram
     {
@@ -11,8 +12,8 @@ namespace ConsoleApp1.Gpt
         {
             var count = 0;
             using var lua = new Lua();
-            var recipes = new Recipe.List();
-            var game = new Game();
+            var recipes = new RecipeList();
+            var game = new GameWorld.Game();
 
             var console = new GameConsole(game);
 

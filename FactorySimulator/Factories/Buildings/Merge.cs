@@ -1,12 +1,13 @@
-﻿using ClassLibrary1.Gpt.Item;
+﻿using FactorySimulator.Factories;
+using FactorySimulator.Factories.Items;
 
-namespace ConsoleApp1.Gpt.Buildings
+namespace FactorySimulator.Factories.Buildings
 {
     public class Merge : Building
     {
-        public Merge(Factory game) : base("Merger", game)
+        internal Merge(Action<Building> game) : base("Merger", game)
         {
-            Recipes.Add(Recipe.List.Any);
+            Recipes.Add(RecipeList.Any);
         }
 
         internal override Building ProcessResources()

@@ -4,38 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using ClassLibrary1.Gpt.Item;
+using FactorySimulator.Factories;
+using FactorySimulator.Factories.Items;
 
-namespace ConsoleApp1.Gpt.Buildings
+namespace FactorySimulator.Factories.Buildings
 {
-    public partial class Building
-    {
-        public Merge Merge(params Building[] secondary)
-        {
-            var c = Create(new Merge(this.Game));
-            foreach (var item in secondary)
-            {
-                item.AddOutputConveyor(c);
-            }
-            return c;
-        }
-
-        public Assembler Assembler(Recipe recipe)
-            => Create(new Assembler(this.Game, recipe));
-
-        public Smelter Smelter()
-            => Create(new Smelter(Game));
-
-        public BuildingList Split(params Action<Split>[] actions)
-        {
-            var split = Create(new Split(this.Game, actions));
-            return new BuildingList(split.OutputConveyors);
-        }
-
-        public Constructor Constructor(Recipe recipe)
-            => Create(new Constructor(this.Game, recipe));
-    }
-
     public partial class Building
     {
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -44,36 +17,36 @@ namespace ConsoleApp1.Gpt.Buildings
         internal Dictionary<ItemName, int> OutputResources { get; set; }
         internal List<Building> OutputConveyors { get; set; } = new List<Building>();
         internal List<Building> InputConveyors { get; set; } = new List<Building>();
-        internal Factory Game { get; }
+        internal Action<Building> OnBuildingCreated { get; }
         private Recipe? SelectedRecipe { get; set; }
         protected List<Recipe> Recipes { get; set; } = new List<Recipe>();
 
-        public Building(string name, Dictionary<ItemName, int> input, List<Recipe> recipes, Factory game)
+        public Building(string name, Dictionary<ItemName, int> input, List<Recipe> recipes, Action<Building> game)
         {
             Name = name;
             InputResources = input;
             OutputResources = new Dictionary<ItemName, int>();
             Recipes = recipes;
-            Game = game;
-            game.AddBuilding(this);
+            OnBuildingCreated = game;
+            game(this);
         }
 
-        public Building(string name, Dictionary<ItemName, int> input, Factory game)
+        public Building(string name, Dictionary<ItemName, int> input, Action<Building> game)
         {
             Name = name;
             InputResources = input;
             OutputResources = new Dictionary<ItemName, int>();
-            Game = game;
-            game.AddBuilding(this);
+            OnBuildingCreated = game;
+            game(this);
         }
 
-        public Building(string name, Factory game)
+        public Building(string name, Action<Building> game)
         {
             Name = name;
             InputResources = new Dictionary<ItemName, int>();
             OutputResources = new Dictionary<ItemName, int>();
-            Game = game;
-            game.AddBuilding(this);
+            OnBuildingCreated = game;
+            game(this);
         }
 
         internal void AddOutputConveyor(Building outputBuilding)
@@ -152,15 +125,15 @@ namespace ConsoleApp1.Gpt.Buildings
 
         public virtual void CopyTo(Building building)
         {
-            building.OutputResources = this.OutputResources;
-            building.InputResources = this.InputResources;
+            building.OutputResources = OutputResources;
+            building.InputResources = InputResources;
         }
 
 
-        private T Create<T>(T create) where T : Building
+        internal T Create<T>(T create) where T : Building
         {
             var building = create;
-            this.AddOutputConveyor(building);
+            AddOutputConveyor(building);
             return building;
         }
 

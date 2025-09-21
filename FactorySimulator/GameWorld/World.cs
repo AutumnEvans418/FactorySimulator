@@ -1,6 +1,6 @@
-﻿using ClassLibrary1.Gpt.Item;
+﻿using FactorySimulator.Factories.Items;
 
-namespace ConsoleApp1.Gpt
+namespace FactorySimulator.GameWorld
 {
     public class World
     {

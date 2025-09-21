@@ -1,11 +1,20 @@
-﻿namespace ConsoleApp1.Gpt
+﻿using FactorySimulator.Factories;
+
+namespace FactorySimulator.GameWorld
 {
     public class Game
     {
         public Game()
         {
             world = new World();
-            factory = new(world);
+            factory = new(world.Node);
+        }
+
+        public Game(Factory factory)
+        {
+            world = new World();
+            factory.GetNode = world.Node;
+            this.factory = factory;
         }
 
         internal Factory factory;
@@ -52,7 +61,7 @@
         {
             try
             {
-                var f = new Factory(this.world);
+                var f = new Factory(world.Node);
                 action(f);
                 SwapFactor(f);
             }

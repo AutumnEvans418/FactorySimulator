@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using ConsoleApp1.Gpt;
+using FactorySimulator.Game;
 
 Console.WriteLine("Hello, World!");
 

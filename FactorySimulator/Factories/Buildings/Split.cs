@@ -1,10 +1,11 @@
-﻿using ClassLibrary1.Gpt.Item;
+﻿using FactorySimulator.Factories;
+using FactorySimulator.Factories.Items;
 
-namespace ConsoleApp1.Gpt.Buildings
+namespace FactorySimulator.Factories.Buildings
 {
     public class Split : Building
     {
-        public Split(Factory game, Action<Split>[] actions) : base("Splitter", game)
+        internal Split(Action<Building> game, Action<Split>[] actions) : base("Splitter", game)
         {
             foreach (var action in actions)
             {
@@ -23,7 +24,7 @@ namespace ConsoleApp1.Gpt.Buildings
         {
             if(building is Split split)
             {
-                split.tick = this.tick;
+                split.tick = tick;
             }
             base.CopyTo(building);
         }

@@ -1,5 +1,5 @@
-﻿using ConsoleApp1.Gpt;
-using CSScriptLib;
+﻿using CSScriptLib;
+using FactorySimulator.Factories;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace FactorySimulator.Tests
         [Fact]
         public void EvaluatorShouldCreateFactory()
         {
-            var factory = CSScript.Evaluator.Eval("using ConsoleApp1.Gpt; return new Factory(new World());") as Factory;
+            var factory = CSScript.Evaluator.Eval("using FactorySimulator.Factories; using FactorySimulator.GameWorld; return new Factory(new World());") as Factory;
 
             factory.Should().BeOfType<Factory>();
         }

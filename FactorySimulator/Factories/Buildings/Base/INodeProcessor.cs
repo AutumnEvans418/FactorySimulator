@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.Gpt.Buildings
+﻿namespace FactorySimulator.Factories.Buildings.Base
 {
     public interface INodeProcessor
     {

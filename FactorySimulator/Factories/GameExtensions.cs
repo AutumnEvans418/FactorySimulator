@@ -1,7 +1,6 @@
-﻿using ClassLibrary1.Gpt.Item;
-using ConsoleApp1.Gpt.Buildings;
+﻿using FactorySimulator.Factories.Items;
 
-namespace ConsoleApp1.Gpt
+namespace FactorySimulator.Factories
 {
     public static class GameExtensions
     {

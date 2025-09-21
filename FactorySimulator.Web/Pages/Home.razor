@@ -1,17 +1,19 @@
 ﻿@page "/"
-@using FactorySimulator.Gpt
+@using FactorySimulator.Display
+@using FactorySimulator.Factories
+@using FactorySimulator.GameWorld
 
 <PageTitle>Home</PageTitle>
 
 <pre>
     <code>
-        @GameMermaid.DisplayFactory(DefaultFactories.BasicScrewFactory(new ConsoleApp1.Gpt.World()))
+        @GameMermaid.DisplayFactory(DefaultFactories.BasicScrewFactory(new World()))
     </code>
 </pre>
 
 <pre>
     <code class="language-mermaid">
-        @GameMermaid.DisplayFactory(DefaultFactories.BasicScrewFactory(new ConsoleApp1.Gpt.World()))
+        @GameMermaid.DisplayFactory(DefaultFactories.BasicScrewFactory(new World()))
     </code>
 </pre>
 <script type="module">
@@ -20,5 +22,13 @@
     await mermaid.run({querySelector:'code.language-mermaid'})
 </script>
 @code {
+    public GameMermaid GameMermaid { get; set; } = new(new Game());
 
+    protected override void OnInitialized()
+    {
+        GameMermaid = new(new Game(DefaultFactories.BasicScrewFactory()))
+
+
+        base.OnInitialized();
+    }
 }

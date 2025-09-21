@@ -1,18 +1,19 @@
-﻿using ClassLibrary1.Gpt.Item;
-using ConsoleApp1.Gpt.Buildings;
+﻿using FactorySimulator.Factories.Buildings;
+using FactorySimulator.GameWorld;
 
-namespace ConsoleApp1.Gpt
+namespace FactorySimulator.Factories
 {
 
     public class Factory
     {
-        public readonly World game;
         public int Ticks { get; set; }
-        public Factory(World game)
+        public Factory(Func<int, MaterialNode> getNode)
         {
-            this.game = game;
+            GetNode = getNode;
         }
         public List<Building> Buildings { get; set; } = new List<Building>();
+        internal Func<int, MaterialNode> GetNode { get; set; }
+
         internal void AddBuilding(Building building)
         {
             Buildings.Add(building);
@@ -20,7 +21,7 @@ namespace ConsoleApp1.Gpt
 
         public Miner Miner(int node)
         {
-            var nodeMaterial = game.Node(node);
+            var nodeMaterial = GetNode(node);
 
             var existingMiner = Buildings.OfType<Miner>().FirstOrDefault(m => m.Node == nodeMaterial.Id);
             if (existingMiner != null)
@@ -28,7 +29,7 @@ namespace ConsoleApp1.Gpt
                 return existingMiner;
             }
 
-            var miner = new Miner(nodeMaterial, this);
+            var miner = new Miner(nodeMaterial, AddBuilding);
             return miner;
         }
 
