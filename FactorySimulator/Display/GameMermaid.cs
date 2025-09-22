@@ -23,12 +23,12 @@ namespace FactorySimulator.Display
         {
             var builder = new StringBuilder();
             builder.AppendLine("graph LR");
-            foreach (var node in game.world.Nodes)
+            foreach (var node in game.World.Nodes)
             {
                 builder.AppendLine($"N{node.Id}[{node.Item}]");
             }
 
-            foreach (var building in game.factory.Buildings)
+            foreach (var building in game.Factory.Buildings)
             {
                 if (building is INodeProcessor np)
                 {
@@ -40,7 +40,7 @@ namespace FactorySimulator.Display
                 builder.AppendLine($"N{building.Id}[\"{building.Name} ({inputs})-->({outputs})\"]");
             }
 
-            foreach (var building in game.factory.Buildings)
+            foreach (var building in game.Factory.Buildings)
             {
                 foreach (var output in building.OutputConveyors)
                 {

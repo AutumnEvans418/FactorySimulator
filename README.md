@@ -9,6 +9,30 @@ FactorySimulator is a .NET 8 console application that allows users to simulate f
 - **Extensible Architecture:** Easily add new components or modify simulation logic.
 - **.NET 8 Powered:** Modern, fast, and cross-platform.
 
+## Goals
+- Create a framework that allows for programming complex factories using simple syntax.
+- Create a visualization to display the factory processing items.
+- Create challenges and puzzles.
+
+### Potential Syntax
+
+Special Syntax:
+Node Type, Recipe, Repeat Amount.
+```
+graph TD
+Miner --> Smelter-Iron-2 --> Constructor-Rod-4 --> Constructor-Screws-4 --> Storage
+```
+
+Mermaid:
+```mermaid
+graph TD
+Miner --> Smelter-Iron-1 --> Constructor-Rod-1 --> Constructor-Screws-1 --> Storage
+	    Smelter-Iron-1 --> Constructor-Rod-3 --> Constructor-Screws-3 --> Storage
+	    
+Miner --> Smelter-Iron-2 --> Constructor-Rod-2 --> Constructor-Screws-2 --> Storage
+	    Smelter-Iron-2 --> Constructor-Rod-4 --> Constructor-Screws-4 --> Storage
+```
+
 ## Getting Started
 
 ### Prerequisites

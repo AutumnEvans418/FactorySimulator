@@ -13,7 +13,7 @@ namespace FactorySimulator.Tests
         public FactoryTests()
         {
             var world = new World();
-            factory = new Factory(world.Node);
+            factory = new Factory(world);
             onCreated = a => { };
         }
 

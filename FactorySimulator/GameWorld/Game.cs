@@ -4,34 +4,29 @@ namespace FactorySimulator.GameWorld
 {
     public class Game
     {
-        public Game()
+        public Game(Func<IFactory> factoryFactory, IWorld getNode)
         {
-            world = new World();
-            factory = new(world.Node);
+            Factory = factoryFactory();
+            FactoryFactory = factoryFactory;
+            World = getNode;
         }
 
-        public Game(Factory factory)
-        {
-            world = new World();
-            factory.GetNode = world.Node;
-            this.factory = factory;
-        }
-
-        internal Factory factory;
-        internal World world;
+        public IFactory Factory { get; set; }
+        public Func<IFactory> FactoryFactory { get; }
+        public IWorld World { get; set; }
         public Action? OnUpdate { get; set; }
         public int UpdateSpeedMilliseconds { get; set; } = 500;
 
-        internal void SwapFactor(Factory newFactory)
+        internal void SwapFactory(IFactory newFactory)
         {
             for (int i = 0; i < newFactory.Buildings.Count; i++)
             {
-                if (i >= factory.Buildings.Count)
+                if (i >= Factory.Buildings.Count)
                 {
                     continue;
                 }
 
-                var oldBuilding = factory.Buildings[i];
+                var oldBuilding = Factory.Buildings[i];
                 var newBuilding = newFactory.Buildings[i];
 
                 if (oldBuilding.Name != newBuilding.Name)
@@ -41,29 +36,29 @@ namespace FactorySimulator.GameWorld
 
                 oldBuilding.CopyTo(newBuilding);
             }
-            var ticks = factory.Ticks;
-            factory = newFactory;
-            factory.Ticks = ticks;
+            var ticks = Factory.Ticks;
+            Factory = newFactory;
+            Factory.Ticks = ticks;
         }
 
-        public void StartGame(Action<Factory> action)
+        public void StartGame(Action<IFactory> action)
         {
             while (true)
             {
                 Update(action);
-                factory.ProcessResources();
+                Factory.ProcessResources();
                 OnUpdate?.Invoke();
                 Thread.Sleep(UpdateSpeedMilliseconds);
             }
         }
 
-        private void Update(Action<Factory> action)
+        private void Update(Action<IFactory> action)
         {
             try
             {
-                var f = new Factory(world.Node);
+                var f = FactoryFactory();
                 action(f);
-                SwapFactor(f);
+                SwapFactory(f);
             }
             catch (Exception e)
             {

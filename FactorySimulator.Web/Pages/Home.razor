@@ -2,32 +2,39 @@
 @using FactorySimulator.Display
 @using FactorySimulator.Factories
 @using FactorySimulator.GameWorld
+@using SkiaSharp.Views.Blazor
 
 <PageTitle>Home</PageTitle>
 
 <pre>
     <code>
-        @GameMermaid.DisplayFactory(DefaultFactories.BasicScrewFactory(new World()))
+        @GameMermaid?.DisplayFactory()
     </code>
 </pre>
 
 <pre>
     <code class="language-mermaid">
-        @GameMermaid.DisplayFactory(DefaultFactories.BasicScrewFactory(new World()))
+        @GameMermaid?.DisplayFactory()
     </code>
 </pre>
+
 <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.0.2/+esm'
     mermaid.initialize({startOnLoad:true,theme:'dark'})
     await mermaid.run({querySelector:'code.language-mermaid'})
 </script>
+
 @code {
-    public GameMermaid GameMermaid { get; set; } = new(new Game());
+    public GameMermaid? GameMermaid { get; set; }
 
     protected override void OnInitialized()
     {
-        GameMermaid = new(new Game(DefaultFactories.BasicScrewFactory()))
+        var world = new World();
 
+        var factory = new Factory(world);
+        factory.Miner(0).IronRodFactory();
+
+        GameMermaid = new GameMermaid(new Game(() => factory, world));
 
         base.OnInitialized();
     }

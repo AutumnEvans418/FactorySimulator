@@ -2,7 +2,8 @@
 
 namespace FactorySimulator.GameWorld
 {
-    public class World
+
+    public class World : IWorld
     {
         public World()
         {
@@ -15,11 +16,7 @@ namespace FactorySimulator.GameWorld
                }
             ];
         }
-        internal MaterialNode[] Nodes { get; set; }
-        internal MaterialNode Node(int node)
-        {
-            return Nodes[node];
-        }
+        public MaterialNode[] Nodes { get; }
     }
 }
 

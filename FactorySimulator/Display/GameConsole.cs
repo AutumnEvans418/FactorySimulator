@@ -57,7 +57,7 @@ namespace FactorySimulator.Display
             ClearVisibleRegion();
 
             Console.SetCursorPosition(0, 0);
-            foreach (var building in game.factory.Buildings.Where(b => b.InputConveyors.Count == 0))
+            foreach (var building in game.Factory.Buildings.Where(b => b.InputConveyors.Count == 0))
             {
                 DisplayBuilding(building);
             }
@@ -69,7 +69,7 @@ namespace FactorySimulator.Display
         {
             var totalItem = new Dictionary<ItemName, int>();
 
-            foreach (var building in game.factory.Buildings)
+            foreach (var building in game.Factory.Buildings)
             {
                 var resources = building.OutputResources.AsEnumerable();
                 resources = resources.Union(building.InputResources);
