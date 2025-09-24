@@ -4,7 +4,7 @@ namespace FactorySimulator.GameWorld
 {
     public class MaterialNode
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         public ItemName Item { get; set; }
         public int Quantity { get; set; }
         public float Speed { get; set; } = 1;

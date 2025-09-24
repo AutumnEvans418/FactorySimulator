@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace FactorySimulator.Display
 {
-
     public class GameMermaid
     {
         private readonly Game game;
@@ -21,34 +20,43 @@ namespace FactorySimulator.Display
 
         public string DisplayFactory()
         {
-            var builder = new StringBuilder();
-            builder.AppendLine("graph LR");
+            var str = new StringBuilder();
+            str.AppendLine("graph TD");
             foreach (var node in game.World.Nodes)
             {
-                builder.AppendLine($"N{node.Id}[{node.Item}]");
+                str.AppendLine($"N{node.Id}[\"{node.Item} Node {node.Id}\"]");
             }
 
             foreach (var building in game.Factory.Buildings)
             {
                 if (building is INodeProcessor np)
                 {
-                    builder.AppendLine($"N{np.Node} --> N{building.Id}");
+                    str.AppendLine($"N{np.Node} --> {building.Name}{building.Id}");
                 }
                 var recipe = building.GetRecipe();
-                var outputs = string.Join(",", recipe?.Output.Select(o => $"{o.Item} {recipe?.Speed(o)}ipm") ?? []);
+
                 var inputs = string.Join(",", recipe?.Input.Select(o => $"{o.Item} {recipe?.Speed(o)}ipm") ?? []);
-                builder.AppendLine($"N{building.Id}[\"{building.Name} ({inputs})-->({outputs})\"]");
+
+                str.Append($"{building.Name}{building.Id}[\"{building.Name} {building.Id}<br>({inputs})");
+
+                if (recipe?.Output != null)
+                {
+                    var outputs = string.Join(",", recipe?.Output.Select(o => $"{o.Item} {recipe?.Speed(o)}ipm") ?? []);
+                    str.Append($"-->({outputs})");
+                }
+
+                str.AppendLine($"<br>{building.GetEfficiency()*100f}%\"]");
             }
 
             foreach (var building in game.Factory.Buildings)
             {
                 foreach (var output in building.OutputConveyors)
                 {
-                    builder.AppendLine($"N{building.Id} --> N{output.Id}");
+                    str.AppendLine($"{building.Name}{building.Id} --> {output.Name}{output.Id}");
                 }
             }
 
-            return builder.ToString();
+            return str.ToString();
         }
     }
 }

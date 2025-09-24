@@ -6,6 +6,7 @@ using FluentAssertions;
 
 namespace FactorySimulator.Tests
 {
+
     public class FactoryTests
     {
         private readonly Factory factory;

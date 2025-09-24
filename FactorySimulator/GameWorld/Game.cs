@@ -4,11 +4,11 @@ namespace FactorySimulator.GameWorld
 {
     public class Game
     {
-        public Game(Func<IFactory> factoryFactory, IWorld getNode)
+        public Game(Func<IFactory> factoryFactory, IWorld world)
         {
             Factory = factoryFactory();
             FactoryFactory = factoryFactory;
-            World = getNode;
+            World = world;
         }
 
         public IFactory Factory { get; set; }
@@ -17,7 +17,16 @@ namespace FactorySimulator.GameWorld
         public Action? OnUpdate { get; set; }
         public int UpdateSpeedMilliseconds { get; set; } = 500;
 
-        internal void SwapFactory(IFactory newFactory)
+        public void StartGame(Action<IFactory> action)
+        {
+            while (true)
+            {
+                Update(action);
+                Thread.Sleep(UpdateSpeedMilliseconds);
+            }
+        }
+
+        private void SwapFactory(IFactory newFactory)
         {
             for (int i = 0; i < newFactory.Buildings.Count; i++)
             {
@@ -41,24 +50,15 @@ namespace FactorySimulator.GameWorld
             Factory.Ticks = ticks;
         }
 
-        public void StartGame(Action<IFactory> action)
-        {
-            while (true)
-            {
-                Update(action);
-                Factory.ProcessResources();
-                OnUpdate?.Invoke();
-                Thread.Sleep(UpdateSpeedMilliseconds);
-            }
-        }
-
-        private void Update(Action<IFactory> action)
+        public void Update(Action<IFactory> action)
         {
             try
             {
                 var f = FactoryFactory();
                 action(f);
                 SwapFactory(f);
+                Factory.ProcessResources();
+                OnUpdate?.Invoke();
             }
             catch (Exception e)
             {

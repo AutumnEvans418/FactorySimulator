@@ -29,6 +29,14 @@ namespace FactorySimulator.Factories.Buildings
             base.CopyTo(building);
         }
 
+        internal override float GetEfficiency()
+        {
+            if (InputConveyors.Count == 0)
+                return 1;
+
+            return (1f / OutputConveyors.Count) * InputConveyors[0].GetEfficiency();
+        }
+
         internal override Building ProcessResources()
         {
             bool canProduce = InputResources.Any(i => i.Value > 0);

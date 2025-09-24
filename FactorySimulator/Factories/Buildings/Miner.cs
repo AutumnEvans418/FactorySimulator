@@ -14,7 +14,7 @@ namespace FactorySimulator.Factories.Buildings
             Node = input.Id;
         }
 
-        public Guid Node { get; set; }
+        public int Node { get; set; }
     }
 }
 

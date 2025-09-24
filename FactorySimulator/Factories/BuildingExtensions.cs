@@ -7,6 +7,9 @@ namespace FactorySimulator.Factories
 {
     public static class BuildingExtensions
     {
+        public static Storage Storage(this Building building)
+            => building.Create(new Storage(building.OnBuildingCreated));
+
         public static Merge Merge(this IEnumerable<Building> buildings)
         {
             if (!buildings.Any())
@@ -34,7 +37,7 @@ namespace FactorySimulator.Factories
         public static List<Building> Split(this Building building, params Action<Split>[] actions)
         {
             var split = building.Create(new Split(building.OnBuildingCreated, actions));
-            return split.OutputConveyors;
+            return split.GetEndOutputConveyors();
         }
 
         public static Constructor Constructor(this Building building, Recipe recipe)

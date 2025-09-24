@@ -1,17 +1,18 @@
-﻿using System;
+﻿using FactorySimulator.Factories;
+using FactorySimulator.Factories.Items;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using FactorySimulator.Factories;
-using FactorySimulator.Factories.Items;
 
 namespace FactorySimulator.Factories.Buildings
 {
     public partial class Building
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         internal string Name { get; set; }
         internal Dictionary<ItemName, int> InputResources { get; set; }
         internal Dictionary<ItemName, int> OutputResources { get; set; }
@@ -142,6 +143,78 @@ namespace FactorySimulator.Factories.Buildings
             var inputs = string.Join(", ", InputResources.Select(i => $"{i.Value} {i.Key}s"));
             var outputs = string.Join(", ", OutputResources.Select(i => $"{i.Value} {i.Key}s"));
             return $"{inputs} -|{Name}|-> {outputs}";
+        }
+
+        public List<Building> GetEndOutputConveyors()
+        {
+            if (OutputConveyors.Count == 0)
+                return [this];
+
+            return OutputConveyors.SelectMany(o => o.GetEndOutputConveyors()).Distinct().ToList();
+        }
+
+        internal virtual float GetEfficiency()
+        {
+            var recipe = GetRecipe();
+            if (recipe == null)
+                return 1;
+
+            return MathF.Min(GetInputEfficiency(recipe.Value), GetOutputEfficiency(recipe.Value));
+        }
+
+        private float GetOutputEfficiency(Recipe recipe)
+        {
+            if (OutputConveyors.Count == 0)
+                return 1f; // sinks (no outputs) never limit production
+
+            float producedRate = recipe.Speed(recipe.Output[0]);
+
+            // distribute production equally if multiple outputs
+            float share = producedRate / OutputConveyors.Count;
+
+            // check each output conveyor's ability to consume
+            var efficiencies = new List<float>();
+            foreach (var output in OutputConveyors)
+            {
+                var outputRecipe = output.GetRecipe();
+                if (outputRecipe == null)
+                {
+                    efficiencies.Add(0f); // consumer has no recipe, can’t consume
+                    continue;
+                }
+
+                float need = outputRecipe.Value.Speed(outputRecipe.Value.Input[0]);
+                float inputCapacity = need * output.GetEfficiency();
+
+                // how much of my "share" this conveyor can take
+                float eff = Math.Min(1f, inputCapacity / share);
+                efficiencies.Add(eff);
+            }
+
+            // If any consumer is limiting, take the minimum
+            return efficiencies.Min();
+        }
+
+        private float GetInputEfficiency(Recipe recipe)
+        {
+            if (InputConveyors.Count == 0)
+                return 1f;
+
+            var recipeNeed = recipe.Speed(recipe.Input[0]);
+
+            var input = InputConveyors[0];
+
+            var inputRecipe = input.GetRecipe();
+
+            if (inputRecipe == null)
+                return 0;
+
+            var inputSpeed = inputRecipe.Value.Speed(inputRecipe.Value.Output[0]) * input.GetEfficiency();
+
+            if (inputSpeed > recipeNeed)
+                return 1;
+
+            return inputSpeed / recipeNeed;
         }
     }
 }

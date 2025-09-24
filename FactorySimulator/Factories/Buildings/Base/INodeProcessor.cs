@@ -2,7 +2,7 @@
 {
     public interface INodeProcessor
     {
-        Guid Node { get; }
+        int Node { get; }
     }
 }
 

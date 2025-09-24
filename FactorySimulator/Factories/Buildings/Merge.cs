@@ -8,6 +8,7 @@ namespace FactorySimulator.Factories.Buildings
         internal Merge(Action<Building> game) : base("Merger", game)
         {
             Recipes.Add(RecipeList.Any);
+            SetRecipe(RecipeList.Any);
         }
 
         internal override Building ProcessResources()

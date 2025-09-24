@@ -11,7 +11,7 @@ namespace FactorySimulator.Factories.Buildings
             SetRecipe(recipe);
         }
 
-        public Guid Node { get; set; }
+        public int Node { get; set; }
 
     }
 }

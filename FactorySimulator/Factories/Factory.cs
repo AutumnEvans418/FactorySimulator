@@ -18,6 +18,7 @@ namespace FactorySimulator.Factories
         internal void AddBuilding(Building building)
         {
             Buildings.Add(building);
+            building.Id = Buildings.Count;
         }
 
         public Miner Miner(int node)

@@ -32,7 +32,9 @@
         var world = new World();
 
         var factory = new Factory(world);
-        factory.Miner(0).IronRodFactory();
+        //factory.Miner(0).SmelterMerge();
+
+        factory.Miner(1).IronRodFactory();
 
         GameMermaid = new GameMermaid(new Game(() => factory, world));
 

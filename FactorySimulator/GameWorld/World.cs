@@ -10,6 +10,13 @@ namespace FactorySimulator.GameWorld
             Nodes =
             [
                new MaterialNode {
+                    Id = 1,
+                    Item=ItemName.IronOre,
+                    Quantity=int.MaxValue,
+                    Speed = 1
+               },
+               new MaterialNode {
+                    Id = 2,
                     Item=ItemName.IronOre,
                     Quantity=int.MaxValue,
                     Speed = 1

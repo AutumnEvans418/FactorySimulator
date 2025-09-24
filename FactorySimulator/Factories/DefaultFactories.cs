@@ -22,17 +22,19 @@ namespace FactorySimulator.Factories
             return factory;
         }
 
-        public static Building IronRodFactory(this Building building)
+        public static Storage SmelterMerge(this Miner miner) => miner.Split(s => s.Smelter(), s => s.Smelter()).Merge().Storage();
+
+        public static Merge IronRodLine(this Building building)
+        {
+            static void split(Split sm) => sm.Constructor(RecipeList.IronRod);
+            return building.Smelter().Split(split, split).Merge();
+        }
+
+        public static Building IronRodFactory(this Miner building)
         {
             return building.Split(
-                s => s.Smelter().Split(
-                    sm => sm.Constructor(RecipeList.IronRod),
-                    sm => sm.Constructor(RecipeList.IronRod)
-                    ).Merge(),
-                s => s.Smelter().Split(
-                    sm => sm.Constructor(RecipeList.IronRod),
-                    sm => sm.Constructor(RecipeList.IronRod)
-                    ).Merge()).Merge();
+                s => s.IronRodLine(),
+                s => s.IronRodLine()).Merge();
         }
     }
 }
