@@ -10,6 +10,11 @@ using System.Xml.Linq;
 
 namespace FactorySimulator.Factories.Buildings
 {
+    public record EfficiencyResult(float Value, string? Reason)
+    {
+        public static EfficiencyResult Full => new EfficiencyResult(1, null);
+    }
+
     public partial class Building
     {
         public int Id { get; set; }
@@ -153,68 +158,136 @@ namespace FactorySimulator.Factories.Buildings
             return OutputConveyors.SelectMany(o => o.GetEndOutputConveyors()).Distinct().ToList();
         }
 
-        internal virtual float GetEfficiency()
+        // public entrypoint - keeps your existing API
+        internal virtual EfficiencyResult GetEfficiency()
         {
-            var recipe = GetRecipe();
-            if (recipe == null)
-                return 1;
-
-            return MathF.Min(GetInputEfficiency(recipe.Value), GetOutputEfficiency(recipe.Value));
+            var cache = new Dictionary<int, EfficiencyResult>();         // memo for this evaluation
+            var visiting = new HashSet<int>();                // recursion stack guard
+            return GetEfficiency(cache, visiting);
         }
 
-        private float GetOutputEfficiency(Recipe recipe)
+        // internal worker with memoization & cycle detection
+        internal virtual EfficiencyResult GetEfficiency(Dictionary<int, EfficiencyResult> cache, HashSet<int> visiting)
         {
-            if (OutputConveyors.Count == 0)
-                return 1f; // sinks (no outputs) never limit production
+            // cheap path: cached value
+            if (cache.TryGetValue(Id, out var cached))
+                return cached;
 
-            float producedRate = recipe.Speed(recipe.Output[0]);
+            // cycle detection: if we're already evaluating this node, return a conservative non-blocking value
+            // (returning 1 here prevents infinite recursion; we can treat it as "assume full" for the purpose of
+            // breaking cycles — this is the simplest safe choice for typical factory graphs)
+            if (!visiting.Add(Id))
+                return EfficiencyResult.Full;
 
-            // distribute production equally if multiple outputs
-            float share = producedRate / OutputConveyors.Count;
-
-            // check each output conveyor's ability to consume
-            var efficiencies = new List<float>();
-            foreach (var output in OutputConveyors)
+            var recipe = GetRecipe();
+            var eff = EfficiencyResult.Full;
+            if (recipe != null)
             {
-                var outputRecipe = output.GetRecipe();
-                if (outputRecipe == null)
-                {
-                    efficiencies.Add(0f); // consumer has no recipe, can’t consume
-                    continue;
-                }
-
-                float need = outputRecipe.Value.Speed(outputRecipe.Value.Input[0]);
-                float inputCapacity = need * output.GetEfficiency();
-
-                // how much of my "share" this conveyor can take
-                float eff = Math.Min(1f, inputCapacity / share);
-                efficiencies.Add(eff);
+                var inputEff = GetInputEfficiency(recipe.Value, cache, visiting);
+                var outputEff = GetOutputEfficiency(recipe.Value, cache, visiting);
+                eff = inputEff.Value < outputEff.Value ? inputEff : outputEff;
             }
 
-            // If any consumer is limiting, take the minimum
-            return efficiencies.Min();
+            cache[Id] = eff;          // memoize
+            visiting.Remove(Id);      // pop stack
+            return eff;
         }
 
-        private float GetInputEfficiency(Recipe recipe)
+        private EfficiencyResult GetOutputEfficiency(Recipe recipe, Dictionary<int, EfficiencyResult> cache, HashSet<int> visiting)
         {
+            if (OutputConveyors.Count == 0)
+                return new EfficiencyResult(1, null); // sink doesn't limit production
+
+            float producedRate = recipe.Speed(recipe.Output[0]);
+            float totalCapacity = 0f;
+
+            var myOutputItem = recipe.Output[0].Item;
+            string? limitingReason = null;
+
+            foreach (var consumer in OutputConveyors)
+            {
+                var consumerRecipe = consumer.GetRecipe();
+                if (consumerRecipe == null)
+                    continue;
+
+                // does consumer actually take this item?
+                if (consumerRecipe.Value.Input.All(i => i.Item != myOutputItem))
+                    continue;
+
+                var consumerInput = consumerRecipe.Value.Input.First(i => i.Item == myOutputItem);
+                var need = consumerRecipe.Value.Speed(consumerInput);
+                var consumerEff = consumer.GetEfficiency(cache, visiting);
+
+                totalCapacity += need * consumerEff.Value;
+
+                if (consumerEff.Value < 1f)
+                    limitingReason = $"Downstream {consumer.GetType().Name} limited ({consumerEff.Reason})";
+            }
+
+            // Miner is limited only if consumers together can't absorb all its output
+            return totalCapacity >= producedRate
+                ? EfficiencyResult.Full
+                : new EfficiencyResult(totalCapacity / producedRate, string.IsNullOrEmpty(limitingReason)
+            ? $"Outputs cannot absorb full rate: {totalCapacity}/{producedRate}"
+            : limitingReason);
+        }
+
+
+        private EfficiencyResult GetInputEfficiency(Recipe? recipe, Dictionary<int, EfficiencyResult> cache, HashSet<int> visiting)
+        {
+            if (recipe == null)
+                return EfficiencyResult.Full;
+
             if (InputConveyors.Count == 0)
-                return 1f;
+            {
+                return EfficiencyResult.Full;
+            }
 
-            var recipeNeed = recipe.Speed(recipe.Input[0]);
+            // For each required ingredient, compute total supply from all input conveyors that produce that item.
+            // The final input efficiency is the minimum supply fraction across all required ingredients.
+            EfficiencyResult overallMin = EfficiencyResult.Full;
+            string? reason = null;
+            foreach (var req in recipe.Value.Input)
+            {
+                var needed = recipe.Value.Speed(req); // how much of this item we need per minute
+                float totalSupply = 0f;
 
-            var input = InputConveyors[0];
+                foreach (var supplier in InputConveyors)
+                {
+                    var supplierRecipe = supplier.GetRecipe();
+                    if (supplierRecipe == null)
+                        continue;
 
-            var inputRecipe = input.GetRecipe();
+                    // does supplier produce the item we need?
+                    if (supplierRecipe.Value.Output.All(o => o.Item != req.Item))
+                        continue;
 
-            if (inputRecipe == null)
-                return 0;
+                    var supplierOutput = supplierRecipe.Value.Output.First(o => o.Item == req.Item);
+                    // supplier's raw output speed for that item
+                    var supplierRawSpeed = supplierRecipe.Value.Speed(supplierOutput);
+                    // supplier's effective contribution depends on its efficiency
+                    var supplierEff = supplier.GetEfficiency(cache, visiting);
 
-            var inputSpeed = inputRecipe.Value.Speed(inputRecipe.Value.Output[0]) * input.GetEfficiency();
+                    float share = 1f;
+                    if (supplier is Split split)
+                    {
+                        share = 1f / split.OutputConveyors.Count;
+                    }
 
-            if (inputSpeed > recipeNeed)
-                return 1;
+                    totalSupply += supplierRawSpeed * supplierEff.Value * share;
+                }
 
-            return inputSpeed / recipeNeed;
+                var ratio = needed == 0 ? 
+                    EfficiencyResult.Full : 
+                    (totalSupply >= needed ? 
+                        EfficiencyResult.Full : 
+                        new EfficiencyResult(totalSupply / needed, $"Input {req.Item} underfed: {totalSupply}/{needed}"));
+
+
+                overallMin = overallMin.Value < ratio.Value ? overallMin : ratio;
+            }
+
+            return overallMin;
         }
     }
 }

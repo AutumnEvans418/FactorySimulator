@@ -45,7 +45,9 @@ namespace FactorySimulator.Display
                     str.Append($"-->({outputs})");
                 }
 
-                str.AppendLine($"<br>{building.GetEfficiency()*100f}%\"]");
+                var eff = building.GetEfficiency();
+
+                str.AppendLine($"<br>{eff.Value*100f}% {eff.Reason}\"]");
             }
 
             foreach (var building in game.Factory.Buildings)

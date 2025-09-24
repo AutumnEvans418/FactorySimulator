@@ -29,13 +29,31 @@ namespace FactorySimulator.Factories.Buildings
             base.CopyTo(building);
         }
 
-        internal override float GetEfficiency()
+        internal override EfficiencyResult GetEfficiency(Dictionary<int, EfficiencyResult> cache, HashSet<int> visiting)
         {
-            if (InputConveyors.Count == 0)
-                return 1;
+            if (cache.TryGetValue(Id, out var cached))
+                return cached;
 
-            return (1f / OutputConveyors.Count) * InputConveyors[0].GetEfficiency();
+            if (!visiting.Add(Id))
+                return EfficiencyResult.Full;
+
+            EfficiencyResult eff;
+            if (InputConveyors.Count == 0)
+            {
+                eff = EfficiencyResult.Full; // nothing to split
+            }
+            else
+            {
+                // just pass through the input’s efficiency
+                eff = InputConveyors[0].GetEfficiency(cache, visiting);
+            }
+
+            cache[Id] = eff;
+            visiting.Remove(Id);
+            return eff;
         }
+
+
 
         internal override Building ProcessResources()
         {
