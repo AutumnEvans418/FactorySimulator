@@ -1,5 +1,7 @@
 ﻿using CSScriptLib;
 using FactorySimulator.Factories;
+using FactorySimulator.GameWorld;
+using FactorySimulator.Scripting;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,12 @@ namespace FactorySimulator.Tests
     
     public class FactoryScriptingTests
     {
+        FactoryScriptEngine scriptEngine;
+        public FactoryScriptingTests()
+        {
+            scriptEngine = new FactoryScriptEngine(); 
+        }
+
         [Fact]
         public void ProductTest()
         {
@@ -39,6 +47,24 @@ namespace FactorySimulator.Tests
             var factory = CSScript.Evaluator.Eval("using FactorySimulator.Factories; using FactorySimulator.GameWorld; return new Factory(new World());") as Factory;
 
             factory.Should().BeOfType<Factory>();
+        }
+
+        [Fact]
+        public void ScriptEngine_Execute_ShouldModifyFactory()
+        {
+            var factory = new Factory(new World());
+
+            factory = scriptEngine.Execute(factory, "f.Miner(0).Smelter().Storage()");
+            factory.Buildings.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public void ScriptEngine_MergeList_ShouldModifyFactory()
+        {
+            var factory = new Factory(new World());
+
+            factory = scriptEngine.Execute(factory, "[f.Miner(0)].Merge().Smelter().Storage()");
+            factory.Buildings.Should().HaveCount(4);
         }
     }
 }

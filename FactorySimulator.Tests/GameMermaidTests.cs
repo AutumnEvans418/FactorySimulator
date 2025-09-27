@@ -66,5 +66,7 @@ namespace FactorySimulator.Tests
 
             mermaid.DisplayFactory().Should().Contain("graph");
         }
+
+        
     }
 }

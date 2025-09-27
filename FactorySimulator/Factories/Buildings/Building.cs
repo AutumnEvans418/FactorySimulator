@@ -211,10 +211,10 @@ namespace FactorySimulator.Factories.Buildings
                     continue;
 
                 // does consumer actually take this item?
-                if (consumerRecipe.Value.Input.All(i => i.Item != myOutputItem))
+                if (myOutputItem != ItemName.Any && consumerRecipe.Value.Input.All(i => i.Item != ItemName.Any && i.Item != myOutputItem))
                     continue;
 
-                var consumerInput = consumerRecipe.Value.Input.First(i => i.Item == myOutputItem);
+                var consumerInput = consumerRecipe.Value.Input.First(i => i.Item == ItemName.Any || i.Item == myOutputItem || myOutputItem == ItemName.Any);
                 var need = consumerRecipe.Value.Speed(consumerInput);
                 var consumerEff = consumer.GetEfficiency(cache, visiting);
 
@@ -259,10 +259,10 @@ namespace FactorySimulator.Factories.Buildings
                         continue;
 
                     // does supplier produce the item we need?
-                    if (supplierRecipe.Value.Output.All(o => o.Item != req.Item))
+                    if (req.Item != ItemName.Any && supplierRecipe.Value.Output.All(o => o.Item != req.Item))
                         continue;
 
-                    var supplierOutput = supplierRecipe.Value.Output.First(o => o.Item == req.Item);
+                    var supplierOutput = supplierRecipe.Value.Output.First(o => o.Item == req.Item || req.Item == ItemName.Any);
                     // supplier's raw output speed for that item
                     var supplierRawSpeed = supplierRecipe.Value.Speed(supplierOutput);
                     // supplier's effective contribution depends on its efficiency
