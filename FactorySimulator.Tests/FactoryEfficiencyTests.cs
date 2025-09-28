@@ -130,6 +130,25 @@ namespace FactorySimulator.Tests
         [InlineData(DefaultFactoryScripts.MinerMergeStorage, typeof(Merge), 1)]
         [InlineData(DefaultFactoryScripts.MinerMergeStorage, typeof(Storage), 1)]
         [InlineData(DefaultFactoryScripts.MinerMergeStorage, typeof(Miner), 1)]
+
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelter, typeof(Miner), 1)]
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelter, typeof(Smelter), 1)]
+
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelterMergeStorage, typeof(Miner), 1)]
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelterMergeStorage, typeof(Smelter), 1)]
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelterMergeStorage, typeof(Storage), 1)]
+
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelterConstructor, typeof(Miner), 1)]
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelterConstructor, typeof(Smelter), 1)]
+        [InlineData(DefaultFactoryScripts.MinerSplitSmelterConstructor, typeof(Constructor), 1)]
+
+        [InlineData(DefaultFactoryScripts.MinerSmelterConstructorPlate, typeof(Miner), 0.5f, "Outputs cannot absorb full rate: 30/60")]
+        [InlineData(DefaultFactoryScripts.MinerSmelterConstructorPlate, typeof(Smelter), 1)]
+        [InlineData(DefaultFactoryScripts.MinerSmelterConstructorPlate, typeof(Constructor), 1)]
+
+        [InlineData(DefaultFactoryScripts.MinerSmelterConstructorRod, typeof(Miner), 0.25f, "Downstream Smelter limited (Outputs cannot absorb full rate: 15/30)")]
+        [InlineData(DefaultFactoryScripts.MinerSmelterConstructorRod, typeof(Smelter), 0.5f, "Outputs cannot absorb full rate: 15/30")]
+        [InlineData(DefaultFactoryScripts.MinerSmelterConstructorRod, typeof(Constructor), 1)]
         public void DynamicEffTests(string code, Type t, float value, string? error = null)
         {
             var engine = new FactoryScriptEngine();

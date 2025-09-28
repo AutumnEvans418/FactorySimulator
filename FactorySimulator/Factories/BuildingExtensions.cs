@@ -10,6 +10,8 @@ namespace FactorySimulator.Factories
         public static Storage Storage(this Building building)
             => building.Create(new Storage(building.OnBuildingCreated));
 
+        public static Storage St(this Building building) => Storage(building);
+
         public static Merge Merge(this IEnumerable<Building> buildings)
         {
             if (!buildings.Any())
@@ -17,6 +19,7 @@ namespace FactorySimulator.Factories
 
             return buildings.First().Merge([.. buildings.Skip(1)]);
         }
+        public static Merge Me(this IEnumerable<Building> buildings) => Merge(buildings);
 
         public static Merge Merge(this Building building, params Building[] secondary)
         {
@@ -27,21 +30,27 @@ namespace FactorySimulator.Factories
             }
             return c;
         }
+        public static Merge Me(this Building building, params Building[] secondary) => Merge(building, secondary);
+
 
         public static Assembler Assembler(this Building building, Recipe recipe)
             => building.Create(new Assembler(building.OnBuildingCreated, recipe));
+        public static Assembler As(this Building building, Recipe recipe) => Assembler(building, recipe);
 
         public static Smelter Smelter(this Building building)
             => building.Create(new Smelter(building.OnBuildingCreated));
+        public static Smelter Sm(this Building building) => Smelter(building);
 
         public static List<Building> Split(this Building building, params Action<Split>[] actions)
         {
             var split = building.Create(new Split(building.OnBuildingCreated, actions));
             return split.GetEndOutputConveyors();
         }
+        public static List<Building> Sp(this Building building, params Action<Split>[] actions) => Split(building, actions);
 
         public static Constructor Constructor(this Building building, Recipe recipe)
             => building.Create(new Constructor(building.OnBuildingCreated, recipe));
+        public static Constructor Co(this Building building, Recipe recipe) => Constructor(building, recipe);
     }
 }
 

@@ -35,6 +35,8 @@ namespace FactorySimulator.Factories
             return miner;
         }
 
+        public Miner M(int node) => Miner(node);
+
         public void ProcessResources()
         {
             Ticks++;
