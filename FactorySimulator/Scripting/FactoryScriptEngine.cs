@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace FactorySimulator.Scripting
 {
+    public static class DefaultFactoryScripts
+    {
+        public const string MinersMergeStorage = "[f.Miner(0),f.Miner(1)].Merge().Storage()";
+        public const string MinerMergeStorage = "f.Miner(0).Merge().Storage()";
+    }
+
     public interface IScriptEngine
     {
         Factory Execute(Factory factory);

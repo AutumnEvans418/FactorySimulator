@@ -15,9 +15,14 @@ namespace FactorySimulator.Tests
             factory = new Factory(world);
         }
 
-        public void Test<T>(float value, string? error = null) where T : Building
+        private void Test<T>(float value, string? error = null) where T : Building
         {
-            var miner = factory.Buildings.OfType<T>().First();
+            Test(typeof(T), value, error);
+        }
+
+        private void Test(Type t, float value, string? error = null)
+        {
+            var miner = factory.Buildings.First(b => b.GetType() == t);
             var eff = miner.GetEfficiency();
             eff.Reason.Should().Be(error);
             eff.Value.Should().Be(value);
@@ -117,42 +122,21 @@ namespace FactorySimulator.Tests
             Test<Merge>(1);
         }
 
-
-        [Fact]
-        public void MinerMergeStorage_ShouldBe1()
-        {
-            factory.Miner(0).Merge().Storage();
-
-            Test<Miner>(1);
-            Test<Merge>(1);
-            Test<Storage>(1);
-        }
-
-        [Fact]
-        public void MinerMinerMergeStorage_ShouldBe2()
-        {
-            var list = new[] { factory.Miner(0), factory.Miner(1) }.Merge().Storage();
-
-            Test<Merge>(1);
-            Test<Storage>(1);
-            Test<Miner>(0.5f);
-
-        }
-
-        public static IEnumerable<object[]> DynamicTests()
-        {
-            yield return new object[] { typeof(Merge), "[f.Miner(0),f.Miner(1)].Merge().Storage()", 1 };
-        }
-
         [Theory]
-        [MemberData(nameof(DynamicTests))]
-        public void DynamicEffTests<T>(string code, float value, string? error = null) where T : Building
+        [InlineData(DefaultFactoryScripts.MinersMergeStorage, typeof(Merge), 1)]
+        [InlineData(DefaultFactoryScripts.MinersMergeStorage, typeof(Storage), 1)]
+        [InlineData(DefaultFactoryScripts.MinersMergeStorage, typeof(Miner), 0.5f, "Outputs cannot absorb full rate: 30/60")]
+
+        [InlineData(DefaultFactoryScripts.MinerMergeStorage, typeof(Merge), 1)]
+        [InlineData(DefaultFactoryScripts.MinerMergeStorage, typeof(Storage), 1)]
+        [InlineData(DefaultFactoryScripts.MinerMergeStorage, typeof(Miner), 1)]
+        public void DynamicEffTests(string code, Type t, float value, string? error = null)
         {
             var engine = new FactoryScriptEngine();
 
             engine.Execute(factory, code);
 
-            Test<T>(value, error);
+            Test(t, value, error);
         }
        
     }

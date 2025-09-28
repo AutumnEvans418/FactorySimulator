@@ -218,7 +218,14 @@ namespace FactorySimulator.Factories.Buildings
                 var need = consumerRecipe.Value.Speed(consumerInput);
                 var consumerEff = consumer.GetEfficiency(cache, visiting);
 
-                totalCapacity += need * consumerEff.Value;
+                float share = 1f;
+
+                if (consumer is Merge)
+                {
+                    share = 1f / consumer.InputConveyors.Count;
+                }
+
+                totalCapacity += need * consumerEff.Value * share;
 
                 if (consumerEff.Value < 1f)
                     limitingReason = $"Downstream {consumer.GetType().Name} limited ({consumerEff.Reason})";
@@ -246,7 +253,6 @@ namespace FactorySimulator.Factories.Buildings
             // For each required ingredient, compute total supply from all input conveyors that produce that item.
             // The final input efficiency is the minimum supply fraction across all required ingredients.
             EfficiencyResult overallMin = EfficiencyResult.Full;
-            string? reason = null;
             foreach (var req in recipe.Value.Input)
             {
                 var needed = recipe.Value.Speed(req); // how much of this item we need per minute
@@ -277,10 +283,10 @@ namespace FactorySimulator.Factories.Buildings
                     totalSupply += supplierRawSpeed * supplierEff.Value * share;
                 }
 
-                var ratio = needed == 0 ? 
-                    EfficiencyResult.Full : 
-                    (totalSupply >= needed ? 
-                        EfficiencyResult.Full : 
+                var ratio = needed == 0 ?
+                    EfficiencyResult.Full :
+                    (totalSupply >= needed ?
+                        EfficiencyResult.Full :
                         new EfficiencyResult(totalSupply / needed, $"Input {req.Item} underfed: {totalSupply}/{needed}"));
 
 
