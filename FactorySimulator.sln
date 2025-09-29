@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine", "GameEngine\GameEngine.csproj", "{7B201921-EE1F-457B-8479-C132D9F78A5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine.SkiaSharp", "GameEngine.SkiaSharp\GameEngine.SkiaSharp.csproj", "{2CD442DD-7A18-44BD-88AF-AC375FA13564}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F13926C2-D636-4ECD-8601-02E59F922B8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B201921-EE1F-457B-8479-C132D9F78A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B201921-EE1F-457B-8479-C132D9F78A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B201921-EE1F-457B-8479-C132D9F78A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B201921-EE1F-457B-8479-C132D9F78A5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CD442DD-7A18-44BD-88AF-AC375FA13564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CD442DD-7A18-44BD-88AF-AC375FA13564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CD442DD-7A18-44BD-88AF-AC375FA13564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CD442DD-7A18-44BD-88AF-AC375FA13564}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FactorySimulator\FactorySimulator.csproj" />
+    <ProjectReference Include="..\GameEngine.SkiaSharp\GameEngine.SkiaSharp.csproj" />
   </ItemGroup>
 
 </Project>

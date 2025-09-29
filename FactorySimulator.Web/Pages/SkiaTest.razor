@@ -1,25 +1,57 @@
-﻿@page "/skia"
+﻿@page "/"
+@using GameEngine
+@using GameEngine.SkiaSharp
 @using SkiaSharp
 @using SkiaSharp.Views.Blazor
-<h3>SkiaTest</h3>
+@using System.Drawing
 
 <SKGLView IgnorePixelScaling="true"
           EnableRenderLoop="true"
           OnPaintSurface="OnPaintSurface"
-          oncontextmenu="return false" />
+          oncontextmenu="return false" style="width:100%;height:500px" />
+
 @code {
-    int tickIndex = 0;
-    long tickSum = 0;
-    long[] tickList = new long[100];
-    long lastTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+
+    public GameComponent[] Sprites { get; set; } = [
+        new FpsSprite()
+    ];
+
+    private GameEventArgs? args;
 
     void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
     {
+        args ??= new GameEventArgs()
+        {
+            Canvas = new SkiaCanvas()
+            {
+                Canvas = e.Surface.Canvas,
+            }
+        };
+        args.Width = e.Info.Size.Width;
+        args.Height = e.Info.Size.Height;
+
         // the the canvas and properties
         var canvas = e.Surface.Canvas;
 
         // make sure the canvas is blank
         canvas.Clear(SKColors.White);
+
+
+        var surfaceSize = e.Info.Size;
+
+        foreach (var sprite in Sprites)
+        {
+            sprite.OnPaintBefore(args);
+            sprite.OnPaint(args);
+        }
+
+        var clockSize = Math.Min(surfaceSize.Width, surfaceSize.Height) * 0.4f;
+        var center = new SKPoint(surfaceSize.Width / 2f, surfaceSize.Height / 2f);
+        var now = DateTime.Now;
+
+        // draw the clock
+        canvas.RotateDegrees(-90f, center.X, center.Y);
 
         using var paint = new SKPaint
         {
@@ -27,23 +59,6 @@
             StrokeWidth = 5f,
             StrokeCap = SKStrokeCap.Round
         };
-        using var font = new SKFont
-        {
-            Size = 24
-        };
-
-        var surfaceSize = e.Info.Size;
-        var clockSize = Math.Min(surfaceSize.Width, surfaceSize.Height) * 0.4f;
-        var center = new SKPoint(surfaceSize.Width / 2f, surfaceSize.Height / 2f);
-        var now = DateTime.Now;
-        var fps = GetCurrentFPS();
-
-        // draw the fps counter
-        canvas.DrawText($"{fps:0.00}fps", surfaceSize.Width / 2, surfaceSize.Height - 10f, SKTextAlign.Center, font, paint);
-
-        // draw the clock
-        canvas.RotateDegrees(-90f, center.X, center.Y);
-
         // hours
         paint.StrokeWidth = 3f;
         canvas.Save();
@@ -76,19 +91,5 @@
         canvas.DrawCircle(center, clockSize * 0.9f, paint);
     }
 
-    double GetCurrentFPS()
-    {
-        var newTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var delta = newTick - lastTick;
-        lastTick = newTick;
 
-        tickSum -= tickList[tickIndex];
-        tickSum += delta;
-        tickList[tickIndex] = delta;
-
-        if (++tickIndex == tickList.Length)
-            tickIndex = 0;
-
-        return 1000.0 / ((double)tickSum / tickList.Length);
-    }
 }
